@@ -1,0 +1,81 @@
+﻿@page "/courses/{CourseId}/units/{UnitId}/modules/{ModuleId}"
+@attribute [Authorize]
+
+@using oervmariatrost_kursbuch.Data;
+@using oervmariatrost_kursbuch.Data.DTO;
+@inject NavigationManager NavigationManager
+@inject ICourseDataService CourseDataService;
+
+
+<div class="container-fluid mt-5">
+
+    <div class="card m-3" style=" border:none">
+        <div class="row g-0 mt-3">
+            <div class="col-md-4">
+                <img src="data:image /jpeg;base64,@CourseUnitModuleDto?.Picture" class="img-fluid rounded-start" alt="...">
+            </div>
+            <div class="col-md-8">
+                <div class="card-body">
+                    <h5 class="card-title">@CourseUnitModuleDto?.Name</h5>
+                    <p class="card-text">@CourseUnitModuleDto?.Description</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    
+    <hr />
+    @{
+        int x = 0;
+    }
+
+    @foreach (var submodule in CourseUnitSubModules)
+    {
+
+        x++;
+
+        <div class="row m-3 justify-content-between">
+            <div class="col-auto">
+                <h5><bold>@x</bold></h5>
+            </div>
+            <div class="col-auto">
+                <h5><bold>@submodule.Name</bold></h5>
+            </div>
+
+            <div class="col-auto justify-content-end">
+                <a href="@submodule.Link" target="_blank" class="btn btn-outline-primary"> Link</a>
+            </div>
+        </div>
+        <div class="row justify-content-between m-3">
+            <div class="col-auto">
+                <p><small class="text-muted">@submodule.Description</small></p>
+            </div>
+        </div>
+        <hr />
+    }
+
+</div>
+@code {
+    [CascadingParameter]
+    private Task<AuthenticationState> authenticationStateTask { get; set; }
+    [Parameter]
+    public string CourseId { get; set; }
+    [Parameter]
+    public string UnitId { get; set; }
+    [Parameter]
+    public string ModuleId { get; set; }
+
+    private CourseUnitModuleDTO CourseUnitModuleDto = new CourseUnitModuleDTO();
+    private IList<CourseUnitSubModuleDTO> CourseUnitSubModules = new List<CourseUnitSubModuleDTO>();
+
+    protected async override Task OnInitializedAsync()
+    {
+        var claims = (await authenticationStateTask).User.Claims.ToList();
+        var authenticatedEmail = claims.FirstOrDefault(x => x.Type == "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress")?.Value;
+        CourseUnitModuleDto = await CourseDataService.GetCourseUnitModule(Guid.Parse(ModuleId));
+        await InvokeAsync(() => StateHasChanged());
+        CourseUnitSubModules = await CourseDataService.GetSubModules(Guid.Parse(ModuleId));
+        await InvokeAsync(() => StateHasChanged());
+    }
+
+}

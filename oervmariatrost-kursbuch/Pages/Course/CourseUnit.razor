@@ -7,8 +7,59 @@
 @inject ICourseDataService CourseDataService;
 
 
-<div class="container-fluid">
+<div class="container-fluid mt-5">
+    <div class="row justify-content-center">
+        <h5 class="justify-content-center">@CourseDetails.Name</h5>
+    </div>
 
+    <div class="row m-4">
+        <div class="col-12">
+            <p>
+                @((MarkupString)CourseDetails?.UnitDescription1)
+            </p>
+        </div>
+    </div>
+    <div class="row m-4">
+        <div class="col-12">
+            <p>
+                @((MarkupString)CourseDetails?.UnitDescription2)
+            </p>
+        </div>
+    </div>
+    <div class="row m-4">
+        <div class="col-12">
+            <p>
+                @((MarkupString)CourseDetails?.UnitDescription3)
+            </p>
+        </div>
+    </div>
+    <div class="row m-4">
+        <div class="col-12">
+            <p>
+                @((MarkupString)CourseDetails?.UnitDescription4)
+            </p>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-12"><h5> Module </h5></div>
+    </div>
+    <div class="row row-cols-1 row-cols-md-3 g-4">
+        @foreach (var module in CourseUnitModules)
+        {
+            <div class="col">
+                <div class="card h-100">
+                    <div class="card-body">
+                        <h5 class="card-title">@module.Name</h5>
+                        <p class="card-text">@module.Description</p>
+                    </div>
+                    <div class="card-footer">
+                        <a href="/courses/@CourseId/units/@UnitId/modules/@module.ModuleId" class="btn btn-outline-primary @(module.IsAvailable ? "" : "disabled")">Modul ansehen</a>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
 
 </div>
 @code {
@@ -19,16 +70,17 @@
     [Parameter]
     public string UnitId { get; set; }
 
-  
-
+    private CourseUnitDetailDTO CourseDetails = new CourseUnitDetailDTO();
+    private IList<CourseUnitModuleDTO> CourseUnitModules = new List<CourseUnitModuleDTO>();
 
     protected async override Task OnInitializedAsync()
     {
         var claims = (await authenticationStateTask).User.Claims.ToList();
         var authenticatedEmail = claims.FirstOrDefault(x => x.Type == "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress")?.Value;
-       
+        CourseDetails = await CourseDataService.GetCourseUnit(Guid.Parse(UnitId));
         await InvokeAsync(() => StateHasChanged());
-
+        CourseUnitModules = await CourseDataService.GetCourseUnitModules(Guid.Parse(UnitId));
+        await InvokeAsync(() => StateHasChanged());
     }
 
 }

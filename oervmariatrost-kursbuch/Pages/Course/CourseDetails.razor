@@ -83,7 +83,7 @@
         var authenticatedEmail = claims.FirstOrDefault(x => x.Type == "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress")?.Value;
         Course = await CourseDataService.GetCourseDetails(Guid.Parse(CourseId));
         await InvokeAsync(() => StateHasChanged());
-        Units = await CourseDataService.GetCourseUnit(Guid.Parse(CourseId));
+        Units = await CourseDataService.GetCourseUnits(Guid.Parse(CourseId));
         await InvokeAsync(() => StateHasChanged());
 
     }
