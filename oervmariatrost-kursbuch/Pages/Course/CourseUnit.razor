@@ -1,0 +1,34 @@
+﻿@page "/courses/{CourseId}/units/{UnitId}"
+@attribute [Authorize]
+
+@using oervmariatrost_kursbuch.Data;
+@using oervmariatrost_kursbuch.Data.DTO;
+@inject NavigationManager NavigationManager
+@inject ICourseDataService CourseDataService;
+
+
+<div class="container-fluid">
+
+
+</div>
+@code {
+    [CascadingParameter]
+    private Task<AuthenticationState> authenticationStateTask { get; set; }
+    [Parameter]
+    public string CourseId { get; set; }
+    [Parameter]
+    public string UnitId { get; set; }
+
+  
+
+
+    protected async override Task OnInitializedAsync()
+    {
+        var claims = (await authenticationStateTask).User.Claims.ToList();
+        var authenticatedEmail = claims.FirstOrDefault(x => x.Type == "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress")?.Value;
+       
+        await InvokeAsync(() => StateHasChanged());
+
+    }
+
+}

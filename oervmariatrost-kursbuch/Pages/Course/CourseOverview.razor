@@ -1,50 +1,49 @@
 ﻿@page "/courses"
+@attribute [Authorize]
+
+@using oervmariatrost_kursbuch.Data;
+@using oervmariatrost_kursbuch.Data.DTO;
 @inject NavigationManager NavigationManager
+@inject ICourseDataService CourseDataService;
+
 
 <div class="justify-content-center align-content-center">
 <h3>Meine Kurse</h3>
 </div>
 <div class="mt-5">
     <div class="row row-cols-1 row-cols-md-3 g-4">
+        @foreach(var course in Courses){
         <div class="col">
             <div class="card h-100">
-                <img src="..." class="card-img-top" alt="...">
+                    <img src="data:image/jpeg;base64,@course.Picture" class="card-img-top" alt="...">
                 <div class="card-body">
-                    <h5 class="card-title">Card title</h5>
-                    <p class="card-text">This is a longer card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
+                    <h5 class="card-title">@course.Title</h5>
+                    <p class="card-text">@course.OverviewDescription</p>
                 </div>
                 <div class="card-footer">
-                    <NavLink href="/courses/1" class="btn btn-outline-primary">Zum Kursbuch</NavLink>
+                        <a href="/courses/@course.CourseId" class="btn btn-outline-primary @(course.UseCourseBook ? "" : "disabled")">Zum Kursbuch</a>
                 </div>
             </div>
         </div>
-        <div class="col">
-            <div class="card h-100">
-                <img src="..." class="card-img-top" alt="...">
-                <div class="card-body">
-                    <h5 class="card-title">Card title</h5>
-                    <p class="card-text">This is a short card.</p>
-                </div>
-                <div class="card-footer">
-                    <NavLink href="/courses/1" class="btn btn-outline-primary disabled">Zum Kursbuch</NavLink>
-                </div>
-            </div>
-        </div>
-        <div class="col">
-            <div class="card h-100">
-                <img src="..." class="card-img-top" alt="...">
-                <div class="card-body">
-                    <h5 class="card-title">Card title</h5>
-                    <p class="card-text">This is a longer card with supporting text below as a natural lead-in to additional content.</p>
-                </div>
-                <div class="card-footer">
-                    <NavLink href="/courses/1" class="btn btn-outline-primary disabled">Zum Kursbuch</NavLink>
-                </div>
-            </div>
-        </div>
+        }
     </div>
 </div>
 
+
 @code {
+    [CascadingParameter]
+    private Task<AuthenticationState> authenticationStateTask { get; set; }
+
+    private IList<CourseOverviewDTO> Courses = new List<CourseOverviewDTO>();
+
+
+    protected async override Task OnInitializedAsync()
+    {
+        var claims = (await authenticationStateTask).User.Claims.ToList();
+        var authenticatedEmail = claims.FirstOrDefault(x => x.Type == "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress")?.Value;
+        Courses = await CourseDataService.GetAvailableCourses(authenticatedEmail);
+        await InvokeAsync(() => StateHasChanged());
+    }
+
 
 }

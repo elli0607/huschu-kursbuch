@@ -1,0 +1,91 @@
+﻿@page "/courses/{CourseId}"
+@attribute [Authorize]
+
+@using oervmariatrost_kursbuch.Data;
+@using oervmariatrost_kursbuch.Data.DTO;
+@inject NavigationManager NavigationManager
+@inject ICourseDataService CourseDataService;
+
+
+<div class="container-fluid">
+    <div class="card m-3" style=" border:none">
+        <div class="row g-0 mt-3">
+            <div class="col-md-4">
+                <img src="data:image /jpeg;base64,@Course?.Picture" class="img-fluid rounded-start" alt="...">
+            </div>
+            <div class="col-md-8">
+                <div class="card-body">
+                    <h5 class="card-title">@Course?.Title</h5>
+                    <p class="card-text">@Course?.Description</p>
+                    <p class="card-text fw-bold"> Kursleiter: @Course?.Instructor</p>
+                    <p class="card-text fw-bold">Trainer: @Course?.Trainers</p>
+                    <p class="card-text small">Kursstart</p>
+                    <p class="card-text small">Kursende</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row justify-content-between m-3 mb-5">
+        <div class="col-auto">
+            <h5> <i class="fa-solid fa-dog"></i> Anwesend: <small class="text-muted">@Course?.MyPresense / @Course?.TotalUnits</small></h5>
+        </div>
+        <div class="col-auto">
+            <h5><i class="fa-solid fa-handshake"></i> Entschuldigt:  <small class="text-muted">@Course?.MyExcusedAbsence / @Course?.TotalUnits</small></h5>
+        </div>
+        <div class="col-auto">
+            <h5><i class="fa-solid fa-gavel"></i> Abwesend: <small class="text-muted">@Course?.MyAbsence / @Course?.TotalUnits</small></h5>
+        </div>
+    </div>
+    <hr/>
+    @{
+        int x = 0;
+    }
+
+    @foreach (var unit in Units)
+    {
+       
+            x++;
+        
+        <div class="row m-3 justify-content-between">
+            <div class="col-auto">
+                <h5><bold>@x</bold></h5>
+            </div>
+            <div class="col-auto">
+                <h5><bold>@unit.ExecutionDate     @unit.Name</bold></h5>
+            </div>
+            
+            <div class="col-auto justify-content-end">
+                <a href="/courses/@CourseId/units/@unit.UnitId" class="btn btn-outline-primary @(Course.UseCourseBook ? "" : "disabled")">Ganze Einheit</a>
+            </div>
+        </div>
+        <div class="row justify-content-between m-3">
+            <div class="col-auto">
+                <p><small class="text-muted">@unit.Description</small></p>
+            </div>
+        </div>
+        <hr/>
+    }
+
+</div>
+@code {
+    [CascadingParameter]
+    private Task<AuthenticationState> authenticationStateTask { get; set; }
+    [Parameter]
+    public string CourseId { get; set; }
+
+    private CourseDetailDTO Course = new CourseDetailDTO();
+    private IList<CourseUnitOverviewDTO> Units = new List<CourseUnitOverviewDTO>();
+
+
+    protected async override Task OnInitializedAsync()
+    {
+        var claims = (await authenticationStateTask).User.Claims.ToList();
+        var authenticatedEmail = claims.FirstOrDefault(x => x.Type == "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress")?.Value;
+        Course = await CourseDataService.GetCourseDetails(Guid.Parse(CourseId));
+        await InvokeAsync(() => StateHasChanged());
+        Units = await CourseDataService.GetCourseUnit(Guid.Parse(CourseId));
+        await InvokeAsync(() => StateHasChanged());
+
+    }
+
+}

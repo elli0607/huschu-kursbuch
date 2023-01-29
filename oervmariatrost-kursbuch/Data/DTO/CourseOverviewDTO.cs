@@ -1,6 +1,6 @@
 ﻿namespace oervmariatrost_kursbuch.Data.DTO
 {
-    public class CourseDTO
+    public class CourseOverviewDTO
     {
         public Guid CourseId { get; set; }
         public string Picture { get; set; }
