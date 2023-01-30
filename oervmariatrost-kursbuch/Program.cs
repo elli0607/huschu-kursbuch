@@ -2,8 +2,13 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Protocols.OpenIdConnect;
+using Microsoft.PowerPlatform.Dataverse.Client;
+using Microsoft.Xrm.Sdk;
+using Newtonsoft.Json.Linq;
 using oervmariatrost_kursbuch.Data;
+using System.Net;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -11,7 +16,11 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddRazorPages();
 builder.Services.AddServerSideBlazor();
 builder.Services.AddSingleton<WeatherForecastService>();
-builder.Services.AddScoped<ICourseDataService, CourseDataServiceMock>();
+builder.Services.AddScoped<ICourseDataService, CourseDataServiceCDSClient>();
+
+
+
+builder.Services.AddSingleton<ServiceClient>(new ServiceClient(new Uri(builder.Configuration["CRM:Environment"]), builder.Configuration["CRM:ClientId"], builder.Configuration["CRM:ClientSecret"], true));
 
 builder.Services.AddAuthentication(options => {
     options.DefaultAuthenticateScheme = CookieAuthenticationDefaults.AuthenticationScheme;
@@ -86,3 +95,5 @@ app.MapBlazorHub();
 app.MapFallbackToPage("/_Host");
 app.MapRazorPages();
 app.Run();
+
+
