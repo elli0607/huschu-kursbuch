@@ -5,23 +5,34 @@
 @using oervmariatrost_kursbuch.Data.DTO;
 @inject NavigationManager NavigationManager
 @inject ICourseDataService CourseDataService;
+@inherits LayoutComponentBase
+
 
 
 <div class="justify-content-center align-content-center">
-<h3>Meine Kurse</h3>
+    <h1 class="margin-header">Meine Kurse</h1>
 </div>
 <div class="mt-5">
     <div class="row row-cols-1 row-cols-md-3 g-4">
         @foreach(var course in Courses){
         <div class="col">
-            <div class="card h-100">
-                    <img src="data:image/jpeg;base64,@course.Picture" class="card-img-top" alt="...">
+            <div class="card h-100 course-card">
+                <h3 class="card-title">@course.Title</h3>
+                <img src="data:image/jpeg;base64,@course.Picture" class="card-img-top" alt="...">
                 <div class="card-body">
-                    <h5 class="card-title">@course.Title</h5>
+                    <p class="card-text fw-bold">Hund: @course.DogName</p>
                     <p class="card-text">@course.OverviewDescription</p>
+                    <div class="row org-details">
+                        <div class="col-md-8">
+                            <p class="card-text">Kursstart @course.CourseStartDate.ToString("dd.MM.yyyy HH:mm")</p>
+                        </div>
+                        <div class="col-md-4">
+                            <p class="card-text right-align">@course.NumberOfUnits Einheiten</p>
+                        </div>
+                    </div>
                 </div>
                 <div class="card-footer">
-                        <a href="/courses/@course.CourseId" class="btn btn-outline-primary @(course.UseCourseBook ? "" : "disabled")">Zum Kursbuch</a>
+                    <a href="/courses/@course.CourseId" class="btn btn-outline-primary @(course.UseCourseBook ? "" : "disabled")">Zum Kursbuch</a>
                 </div>
             </div>
         </div>

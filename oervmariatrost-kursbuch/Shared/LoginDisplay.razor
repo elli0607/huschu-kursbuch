@@ -2,18 +2,20 @@
     <Authorized>
         <div class="row">
             <div class="col-auto">
-                Hello, @context.User.Identity.Name!
+                <div class="user-text"> Hallo, @context.User.Identity.Name!</div>
+            </div>
+            <div class="col-auto">
 
             </div>
             <div class="col-auto">
                 <form method="post" action="Account/LogOut">
-                    <button type="submit" class="nav-link btn btn-link">Log out</button>
+                    <button type="submit" class="nav-link btn btn-link"><i class="fa-solid fa-arrow-right-from-bracket auth-icon"></i>Ausloggen</button>
                 </form>
             </div>
         </div>
        
     </Authorized>
     <NotAuthorized>
-        <a href="Account/Login">Log in</a>
+        <a href="Account/Login"><i class="fa-solid fa-arrow-right-to-bracket auth-icon"></i>Einloggen</a>
     </NotAuthorized>
 </AuthorizeView>

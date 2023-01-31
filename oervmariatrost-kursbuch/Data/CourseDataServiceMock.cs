@@ -18,24 +18,33 @@ namespace oervmariatrost_kursbuch.Data
                 {
                      CourseId = Guid.NewGuid(),
                      OverviewDescription = "Kurzbeschreibung Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua.",
-                     Title = "Kurs 1",
+                     Title = "Prüflinge",
+                     DogName = "Isla die Wurst",
                      UseCourseBook = true,
+                     CourseStartDate = new DateTime(2023, 02, 09, 18, 0, 0),
+                     NumberOfUnits = 3,
                      Picture = pic
                 },
                  new CourseOverviewDTO()
                 {
                      CourseId = Guid.NewGuid(),
                      OverviewDescription = "Kurzbeschreibung Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua.",
-                     Title = "Kurs 2",
+                     Title = "Sitzenbleiber",
+                     DogName = "Mieeez",
+                     CourseStartDate = new DateTime(2022, 02, 25, 17, 30, 0), 
                      UseCourseBook = false,
+                     NumberOfUnits = 8,
                      Picture = pic
                 },
                    new CourseOverviewDTO()
                 {
                      CourseId = Guid.NewGuid(),
                      OverviewDescription = "Kurzbeschreibung Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua.",
-                     Title = "Kurs 3",
+                     Title = "Starter",
+                     DogName = "Strolchi",
+                     CourseStartDate = new DateTime(2022, 07, 01, 18, 15, 0),
                      UseCourseBook = false,
+                     NumberOfUnits = 11,
                      Picture = pic
                 }
             };

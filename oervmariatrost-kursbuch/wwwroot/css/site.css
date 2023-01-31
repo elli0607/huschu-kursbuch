@@ -1,15 +1,17 @@
 @import url('open-iconic/font/css/open-iconic-bootstrap.min.css');
 
 html, body {
-    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    font-family: 'Roboto', 'Helvetica Neue', Helvetica, Arial, sans-serif;
 }
 
 h1:focus {
     outline: none;
 }
 
-a, .btn-link {
-    color: #0071c1;
+.nav-link, .btn-link {
+    color: white;
+    text-decoration: none;
+    font-variant: small-caps;
 }
 
 .btn-primary {
@@ -17,6 +19,79 @@ a, .btn-link {
     background-color: #1b6ec2;
     border-color: #1861ac;
 }
+
+.auth-icon {
+    margin-right: .5rem;
+}
+
+.side-container {
+    width: 100%;
+}
+
+.content {
+    width: 80%;
+    margin-left: 10%;
+}
+
+.card-title {
+    text-align: center;
+    font-weight: bold;
+    margin: .8rem;
+}
+
+.org-details {
+    font-size: smaller;
+    font-family: 'Roboto', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+}
+
+.right-align {
+    text-align: right;
+}
+
+.card-footer {
+    text-align:center;
+}
+
+.card-footer > .btn {
+    width: 90%;
+}
+
+.index-content {
+    width: 100%;
+    padding: .5rem;
+    display: flex;
+    text-align: center;
+    flex-wrap: nowrap;
+    justify-content: center;
+}
+
+.user-text {
+    vertical-align: middle;
+    color: white;
+    margin: 0.5rem 0.5rem;
+    font-variant: small-caps;
+}
+
+.home-picture {
+    width: 50%;
+}
+
+.margin-header {
+    margin-top:2.5rem;
+}
+
+.course-card {
+    margin: 0rem 2rem;
+    border:none;
+}
+
+.course-card > .card-body {
+    padding: 1rem .5rem;
+}
+
+    .course-card > .card-footer {
+        background:none !important;
+    }
 
 .btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
   box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;

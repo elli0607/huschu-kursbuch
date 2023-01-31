@@ -4,11 +4,21 @@
 
 .top-row {
     height: 3.5rem;
-    background-color: rgba(0,0,0,0.4);
+    background-color: #EA9B32;
+    padding: 0em;
 }
 
 .navbar-brand {
     font-size: 1.1rem;
+}
+
+.header-logo {
+    width:auto; 
+    height:37px;
+}
+
+.nav-link {
+    color:white !important;
 }
 
 .oi {
