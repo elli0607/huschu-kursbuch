@@ -61,7 +61,9 @@ namespace oervmariatrost_kursbuch.Data
                     Title = "Kurs 1",
                     UseCourseBook = true,
                     Picture = pic,
-                    Description = "Kurzbeschreibung Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua.",
+                    WelcomeText = "Willkommen in deinem Kursbuch für den Starter Kurs. Hier findest du eine Zusammenfassung und weitere Informationen zu den bereits absolvierten Kurseinheiten. Sollte dir etwas abgehen oder du Fragen haben, wende dich gerne an deinen Kursleiter\r\nViel Spaß beim Lernen ;)\r\n",
+                    CourseStartDate = new DateTime(2023, 01, 01, 18, 15, 0),
+                    CourseEndDate = new DateTime(2023, 03, 20),
                     Instructor = "Elisabeth",
                     MyAbsence = 0,
                     MyExcusedAbsence = 0,
@@ -80,14 +82,16 @@ namespace oervmariatrost_kursbuch.Data
                 {
                     Description = "Unitbeschreibung Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua",
                     ExecutionDate = DateTime.Now,
-                    Name = "Kursteil 1",
+                    Name = "Kurseinheit 1",
+                    MyAttendenceState = 781410000,
                     UnitId = Guid.NewGuid()
                 },
                 new CourseUnitOverviewDTO()
                 {
                     Description = "Unitbeschreibung Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua",
-                    ExecutionDate = DateTime.Now,
-                    Name = "Kursteil 2",
+                    ExecutionDate = DateTime.Now.AddDays(7),
+                    Name = "Einheit 2",
+                    MyAttendenceState = 781410001,
                     UnitId = Guid.NewGuid()
                 },
                 new CourseUnitOverviewDTO()
@@ -95,6 +99,7 @@ namespace oervmariatrost_kursbuch.Data
                     Description = "Unitbeschreibung Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua",
                     ExecutionDate = DateTime.Now,
                     Name = "Kursteil 3",
+                    MyAttendenceState = 781410002,
                     UnitId = Guid.NewGuid()
                 },
                 new CourseUnitOverviewDTO()

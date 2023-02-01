@@ -14,6 +14,14 @@ h1:focus {
     font-variant: small-caps;
 }
 
+.nav-link:hover, .btn-link:hover {
+    color: grey
+}
+
+.course-unit-row {
+    align-items:baseline;
+}
+
 .btn-primary {
     color: #fff;
     background-color: #1b6ec2;

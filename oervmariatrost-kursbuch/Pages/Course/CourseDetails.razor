@@ -6,6 +6,9 @@
 @inject NavigationManager NavigationManager
 @inject ICourseDataService CourseDataService;
 
+<div class="justify-content-center align-content-center">
+    <h1 class="margin-header">@Course?.Title</h1>
+</div>
 
 <div class="container-fluid">
     <div class="card m-3" style=" border:none">
@@ -15,12 +18,14 @@
             </div>
             <div class="col-md-8">
                 <div class="card-body">
-                    <h5 class="card-title">@Course?.Title</h5>
-                    <p class="card-text">@Course?.Description</p>
+                    <p class="card-text">@Course?.WelcomeText</p>
                     <p class="card-text fw-bold"> Kursleiter: @Course?.Instructor</p>
-                    <p class="card-text fw-bold">Trainer: @Course?.Trainers</p>
-                    <p class="card-text small">Kursstart</p>
-                    <p class="card-text small">Kursende</p>
+                    <p class="card-text fw-bold">Trainerteam: @Course?.Trainers</p>
+                    <p class="card-text small">
+                        Kursstart: @Course?.CourseStartDate.ToString("dd.MM.yyyy") <br />
+                        Kursende: @Course?.CourseEndDate.ToString("dd.MM.yyyy") <br />
+                        Uhrzeit: @Course?.CourseStartDate.ToShortTimeString() - @Course.CourseStartDate.AddMinutes(60).ToShortTimeString()
+                    </p>
                 </div>
             </div>
         </div>
@@ -46,23 +51,52 @@
        
             x++;
         
-        <div class="row m-3 justify-content-between">
-            <div class="col-auto">
-                <h5><bold>@x</bold></h5>
+        <div class="row m-3 justify-content-between course-unit-row">
+            <div class="col-md-1">
+                <h2><bold>@x</bold></h2>
             </div>
-            <div class="col-auto">
-                <h5><bold>@unit.ExecutionDate     @unit.Name</bold></h5>
+            <div class="col-md-8">
+                <div class="row m-3 justify-content-between course-unit-row">
+                    <div class="col-auto">
+                        <h5><bold>@unit.ExecutionDate.ToString("dd.MM.yyyy")     @unit.Name</bold></h5>
+                    </div>
+                </div>
+                <div class="row m-3">
+                    <div class="row justify-content-between m-3">
+                        <div class="col-auto">
+                            <p><small class="text-muted">@unit.Description</small></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="row">
+                    <div class="col-md-2">
+                        @switch (unit.MyAttendenceState)
+                        {
+                            case 781410000:
+                                <h5> <i class="fa-solid fa-dog"></i></h5>
+                                break;
+                            case 781410001:
+                                <h5> <i class="fa-solid fa-handshake"></i></h5>
+                                break;
+                            case 781410002:
+                                <h5> <i class="fa-solid fa-gavel"></i></h5>
+                                break;
+                            default:
+                                <h5> <i class="fa-solid fa-gavel"></i></h5>
+                                break;
+                        }
+                    </div>
+                    <div class="col-md-10">
+                        <a href="/courses/@CourseId/units/@unit.UnitId" class="btn btn-outline-primary @(unit.MyAttendenceState == 781410002 ? "disabled" : "")">Ganze Einheit anzeigen</a>
+                    </div>
+                </div>
             </div>
             
-            <div class="col-auto justify-content-end">
-                <a href="/courses/@CourseId/units/@unit.UnitId" class="btn btn-outline-primary @(Course.UseCourseBook ? "" : "disabled")">Ganze Einheit</a>
-            </div>
         </div>
-        <div class="row justify-content-between m-3">
-            <div class="col-auto">
-                <p><small class="text-muted">@unit.Description</small></p>
-            </div>
-        </div>
+        
+       
         <hr/>
     }
 

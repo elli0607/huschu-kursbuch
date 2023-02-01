@@ -2,7 +2,8 @@
 {
     public class CourseDetailDTO : CourseOverviewDTO
     {
-        public string Description { get; set; }
+        public DateTime CourseEndDate { get; set; }
+        public string WelcomeText { get; set; }
         public string Instructor { get; set; }
         public string Trainers { get; set; }
         public int MyPresense { get; set; }
