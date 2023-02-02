@@ -28,8 +28,9 @@ h1:focus {
     border-color: #1861ac;
 }
 
-.auth-icon {
+.nav-icon {
     margin-right: .5rem;
+    font-size: x-large;
 }
 
 .side-container {
