@@ -5,6 +5,7 @@ namespace oervmariatrost_kursbuch.Data.DTO
 {
     public class CourseOverviewDTO
     {
+        //Course
         public Guid CourseId { get; set; }
         public string Picture { get; set; }
         public string Title { get; set; }
@@ -12,6 +13,9 @@ namespace oervmariatrost_kursbuch.Data.DTO
         public bool UseCourseBook { get; set; }
         public DateTime CourseStartDate { get; set; }
         public int NumberOfUnits { get; set; }
+
+        //Coursemember 
+        public bool BoughtCourseBook { get; set; }
         public string DogName { get; set; }
 
     }

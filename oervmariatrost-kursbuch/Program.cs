@@ -16,8 +16,8 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddRazorPages();
 builder.Services.AddServerSideBlazor();
 builder.Services.AddSingleton<WeatherForecastService>();
-builder.Services.AddScoped<ICourseDataService, CourseDataServiceMock>();
-
+builder.Services.AddScoped<ICourseDataService, CourseDataServiceCDSClient>();
+//builder.Services.AddScoped<ICourseDataService, CourseDataServiceMock>();
 
 
 builder.Services.AddSingleton<ServiceClient>(new ServiceClient(new Uri(builder.Configuration["CRM:Environment"]), builder.Configuration["CRM:ClientId"], builder.Configuration["CRM:ClientSecret"], true));

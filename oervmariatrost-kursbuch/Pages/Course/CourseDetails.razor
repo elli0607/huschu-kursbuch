@@ -18,7 +18,7 @@
             </div>
             <div class="col-md-8">
                 <div class="card-body">
-                    <p class="card-text">@Course?.WelcomeText</p>
+                    <p class="card-text">@((MarkupString)Course?.WelcomeText)</p>
                     <p class="card-text fw-bold"> Kursleiter: @Course?.Instructor</p>
                     <p class="card-text fw-bold">Trainerteam: @Course?.Trainers</p>
                     <p class="card-text small">
@@ -64,7 +64,7 @@
                 <div class="row m-3">
                     <div class="row justify-content-between m-3">
                         <div class="col-auto">
-                            <p><small class="text-muted">@unit.Description</small></p>
+                            <p><small class="text-muted">@((MarkupString)unit.Description)</small></p>
                         </div>
                     </div>
                 </div>
@@ -115,9 +115,17 @@
     {
         var claims = (await authenticationStateTask).User.Claims.ToList();
         var authenticatedEmail = claims.FirstOrDefault(x => x.Type == "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress")?.Value;
-        Course = await CourseDataService.GetCourseDetails(Guid.Parse(CourseId));
+        try 
+        {
+            Course = await CourseDataService.GetCourseDetails(Guid.Parse(CourseId), authenticatedEmail);
+        }
+        catch (Exception ex)
+        {
+            NavigationManager.NavigateTo("/");
+        }
+       
         await InvokeAsync(() => StateHasChanged());
-        Units = await CourseDataService.GetCourseUnits(Guid.Parse(CourseId));
+        Units = await CourseDataService.GetCourseUnits(Guid.Parse(CourseId), authenticatedEmail);
         await InvokeAsync(() => StateHasChanged());
 
     }

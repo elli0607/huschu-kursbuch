@@ -50,7 +50,7 @@ namespace oervmariatrost_kursbuch.Data
             };
         }
 
-        public async Task<CourseDetailDTO> GetCourseDetails(Guid courseId)
+        public async Task<CourseDetailDTO> GetCourseDetails(Guid courseId, string email)
         {
 
             return
@@ -74,7 +74,7 @@ namespace oervmariatrost_kursbuch.Data
             
         }
 
-        public async Task<IList<CourseUnitOverviewDTO>> GetCourseUnits(Guid courseId)
+        public async Task<IList<CourseUnitOverviewDTO>> GetCourseUnits(Guid courseId, string email)
         {
             return new List<CourseUnitOverviewDTO>()
             {
