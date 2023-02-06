@@ -129,7 +129,7 @@ namespace oervmariatrost_kursbuch.Data
        
 
 
-        public async Task<CourseUnitDetailDTO> GetCourseUnit(Guid courseUnit)
+        public async Task<CourseUnitDetailDTO> GetCourseUnit(Guid courseUnit, string email)
         {
             return new CourseUnitDetailDTO()
             {
@@ -137,10 +137,10 @@ namespace oervmariatrost_kursbuch.Data
                 Description = "Unitbeschreibung Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua",
                 ExecutionDate = DateTime.Now,
                 Name = "Kursteil",
-                UnitDescription1 = "<h6> Titel 1</h6> <p> Unitbeschreibung Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua</p>",
-                UnitDescription2 = "<h6> Titel 2</h6> <p> Unitbeschreibung Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua</p>",
-                UnitDescription3 = "<h6> Titel 3</h6> <p> Unitbeschreibung Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua</p>",
-                UnitDescription4 = "<h6> Titel 4</h6> <p> Unitbeschreibung Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua</p>",
+                SummaryUnit = "<h6> Titel 1</h6> <p> Unitbeschreibung Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua</p>",
+                LearningGoal = "<h6> Titel 2</h6> <p> Unitbeschreibung Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua</p>",
+                ImportantExerciseTips = "<h6> Titel 3</h6> <p> Unitbeschreibung Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua</p>",
+                Lifehacks = "<h6> Titel 4</h6> <p> Unitbeschreibung Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua</p>",
 
             };
         }
@@ -153,40 +153,35 @@ namespace oervmariatrost_kursbuch.Data
                 {
                     Name = "Module 1",
                     Description = "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptu",
-                    IsAvailable = true,
                     ModuleId = Guid.NewGuid()
                 },
                  new CourseUnitModuleDTO()
                 {
                     Name = "Module 2",
                     Description = "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptu",
-                    IsAvailable = true,
                     ModuleId = Guid.NewGuid()
                 },
                   new CourseUnitModuleDTO()
                 {
                     Name = "Module 3",
                     Description = "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptu",
-                    IsAvailable = true,
                     ModuleId = Guid.NewGuid()
                 },
                    new CourseUnitModuleDTO()
                 {
                     Name = "Module 4",
                     Description = "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptu",
-                    IsAvailable = true,
                     ModuleId = Guid.NewGuid()
                 }
             };
         }
 
-        public async Task<CourseUnitModuleDTO> GetCourseUnitModule(Guid moduleId)
+        public async Task<CourseUnitModuleDTO> GetCourseUnitModule(Guid moduleId, Guid courseUnitId)
         {
             return new CourseUnitModuleDTO()
             {
                 Name = "Module 4",
                 Description = "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptu",
-                IsAvailable = true,
                 ModuleId = Guid.NewGuid(),
                 Picture = pic
             };

@@ -15,8 +15,6 @@ namespace oervmariatrost_kursbuch.Data
             _serviceClient = serviceClient;
         }
 
-
-
         public async Task<IList<CourseOverviewDTO>> GetAvailableCourses(string email)
         {
             WhoAmIRequest systemUserRequest = new WhoAmIRequest();
@@ -54,9 +52,10 @@ namespace oervmariatrost_kursbuch.Data
                 "cre56_einheiten",
                 "cre56_kursstart",
                 "cre56_kursid",
+                "cre56_kursbildid", 
+                "cre56_kursbild",
                 "kubu_enablecoursebook",
                 "cre56_name",
-                "cre56_kursbildid",
                 "statuscode"
             );
 
@@ -67,17 +66,21 @@ namespace oervmariatrost_kursbuch.Data
             {
                 //Todo: Add to List
                 CourseOverviewDTO courseModel = new CourseOverviewDTO();
-                courseModel.CourseId = Guid.Parse(this.GetAttributeAsString(course.EntityAlias + ".cre56_kursid", yourCourse));
-                courseModel.BoughtCourseBook = bool.Parse(this.GetAttributeAsString(courseMember.EntityAlias + ".kubu_payedforcoursebook", yourCourse));
-                courseModel.DogName = this.GetAttributeAsString(courseMember.EntityAlias + ".cre56_gefuhrterhund", yourCourse, true);
-                courseModel.CourseStartDate = DateTime.Parse(this.GetAttributeAsString(course.EntityAlias + ".cre56_kursstart", yourCourse));
-                courseModel.NumberOfUnits = int.Parse(this.GetAttributeAsString(course.EntityAlias + ".cre56_einheiten", yourCourse));
-                courseModel.OverviewDescription = this.GetAttributeAsString(course.EntityAlias + ".cre56_beschreibung", yourCourse);
-                courseModel.Title = this.GetAttributeAsString(course.EntityAlias + ".cre56_name", yourCourse);
-                courseModel.UseCourseBook = bool.Parse(this.GetAttributeAsString(course.EntityAlias + ".kubu_enablecoursebook", yourCourse));
+                courseModel.CourseId = Guid.Parse(this.GetAliasedAttributeAsString(course.EntityAlias + ".cre56_kursid", yourCourse));
+                courseModel.BoughtCourseBook = bool.Parse(this.GetAliasedAttributeAsString(courseMember.EntityAlias + ".kubu_payedforcoursebook", yourCourse));
+                courseModel.DogName = this.GetAliasedAttributeAsString(courseMember.EntityAlias + ".cre56_gefuhrterhund", yourCourse, true);
+                courseModel.CourseStartDate = DateTime.Parse(this.GetAliasedAttributeAsString(course.EntityAlias + ".cre56_kursstart", yourCourse));
+                courseModel.NumberOfUnits = int.Parse(this.GetAliasedAttributeAsString(course.EntityAlias + ".cre56_einheiten", yourCourse));
+                courseModel.OverviewDescription = this.GetAliasedAttributeAsString(course.EntityAlias + ".cre56_beschreibung", yourCourse);
+                courseModel.Title = this.GetAliasedAttributeAsString(course.EntityAlias + ".cre56_name", yourCourse);
+                courseModel.UseCourseBook = bool.Parse(this.GetAliasedAttributeAsString(course.EntityAlias + ".kubu_enablecoursebook", yourCourse));
 
                 //has to be done in some better moon phase
-                courseModel.Picture = this.GetAttributeAsString(course.EntityAlias + ".cre56_kursbildid", yourCourse);
+                if(yourCourse.Attributes.Contains(course.EntityAlias + ".cre56_kursbildid_cre56_kursbild"))
+                {
+                    courseModel.Picture = Convert.ToBase64String((byte[])yourCourse.GetAttributeValue<AliasedValue>(course.EntityAlias + ".cre56_kursbildid_cre56_kursbild").Value).ToString();
+                }
+
                 CourseList.Add(courseModel);
             }
 
@@ -99,7 +102,7 @@ namespace oervmariatrost_kursbuch.Data
             "cre56_name",
             "kubu_coursebookwelcometext",
             "kubu_enablecoursebook",
-            "cre56_kursbildid",
+            "cre56_kursbild",
             "cre56_kursende",
             "kubu_coursedurationmin",
             "statecode",
@@ -109,7 +112,6 @@ namespace oervmariatrost_kursbuch.Data
             "statuscode",
             "cre56_trainerteam");
             query.Criteria.AddCondition("cre56_kursid", ConditionOperator.Equal, courseId);
-
             EntityCollection col = _serviceClient.RetrieveMultiple(query);
 
             var courseData = col.Entities.FirstOrDefault(); 
@@ -128,7 +130,9 @@ namespace oervmariatrost_kursbuch.Data
             courseDetail.WelcomeText = courseData.GetAttributeValue<string>("kubu_coursebookwelcometext"); 
             courseDetail.Trainers = courseData.GetAttributeValue<string>("cre56_trainerteam");
             courseDetail.Title = courseData.GetAttributeValue<string>("cre56_name");
-            courseDetail.Picture = courseData.GetAttributeValue<string>("cre56_kursbild_url");
+            if(courseData.Attributes.Contains("cre56_kursbild")) { 
+                courseDetail.Picture = Convert.ToBase64String(courseData.GetAttributeValue<byte[]>("cre56_kursbild")).ToString();
+            }
 
             courseDetail.CourseEndDate = courseData.GetAttributeValue<DateTime>("cre56_kursende");
             var duration = courseData.GetAttributeValue<int>("kubu_coursedurationmin");
@@ -137,20 +141,130 @@ namespace oervmariatrost_kursbuch.Data
             return courseDetail;
         }
 
-        public Task<CourseUnitDetailDTO> GetCourseUnit(Guid courseUnit)
+        public async Task<CourseUnitDetailDTO> GetCourseUnit(Guid courseUnit, string email)
         {
+            Entity course = _serviceClient.Retrieve("cre56_coursehour", courseUnit, new ColumnSet(true));
+            CourseUnitDetailDTO courseUnitModel = new CourseUnitDetailDTO();
+            courseUnitModel.LearningGoal = course.GetAttributeValue<string>("cre56_homework");
+            courseUnitModel.ImportantExerciseTips = course.GetAttributeValue<string>("cre56_importantexercisetips");
+            courseUnitModel.Lifehacks = course.GetAttributeValue<string>("cre56_lifehacks");
+            courseUnitModel.SummaryUnit = course.GetAttributeValue<string>("cre56_summarycourseunit");
+            courseUnitModel.Name = course.GetAttributeValue<string>("cre56_unittitle");
 
-            throw new NotImplementedException();
+            Guid courseMemberId = this.GetCourseMemberId(course.GetAttributeValue<EntityReference>("cre56_accordingcourse").Id, email);
+
+            return courseUnitModel;
         }
 
-        public Task<CourseUnitModuleDTO> GetCourseUnitModule(Guid moduleId)
+        public async Task<CourseUnitModuleDTO> GetCourseUnitModule(Guid moduleId, Guid courseUnitId)
         {
-            throw new NotImplementedException();
+            CourseUnitModuleDTO unitModuleModel = new CourseUnitModuleDTO(); 
+
+            var query = new QueryExpression("kubu_practicedexercise")
+            {
+                TopCount = 50
+            };
+
+            // Add columns to query.ColumnSet
+            query.ColumnSet.AddColumns("kubu_incltheory", "kubu_submodule");
+
+            // Add filter query.Criteria
+            query.Criteria.AddCondition("kubu_mainmodule", ConditionOperator.Equal, moduleId);
+            query.Criteria.AddCondition("kubu_trainingslesson", ConditionOperator.Equal, courseUnitId);
+
+            // Add link-entity mainmodule
+            var mainmodule = query.AddLink("kubu_modul", "kubu_mainmodule", "kubu_modulid");
+            mainmodule.EntityAlias = "mainmodule";
+
+            // Add columns to mainmodule.Columns
+            mainmodule.Columns.AddColumns("kubu_name", "kubu_goal", "cre56_moduleimage", "kubu_modulid");
+            EntityCollection practicedEx = _serviceClient.RetrieveMultiple(query);
+            Entity mainModul = practicedEx.Entities.First();
+
+            unitModuleModel.Description = this.GetAliasedAttributeAsString(mainmodule.EntityAlias + ".kubu_goal", mainModul);
+            unitModuleModel.ModuleId = mainModul.Id;
+            unitModuleModel.Name = this.GetAliasedAttributeAsString(mainmodule.EntityAlias + ".kubu_name", mainModul);
+            unitModuleModel.IncludeTheory = mainModul.GetAttributeValue<bool>("kubu_incltheory");
+            if(mainModul.Attributes.Contains("kubu_submodule"))
+            {
+                unitModuleModel.SubModuleId = mainModul.GetAttributeValue<EntityReference>("kubu_submodule").Id;
+            }
+            if (mainModul.Attributes.Contains(mainmodule.EntityAlias + ".cre56_moduleimage"))
+            {
+                unitModuleModel.Picture = Convert.ToBase64String((byte[])mainModul.GetAttributeValue<AliasedValue>(mainmodule.EntityAlias + ".cre56_moduleimage").Value).ToString();
+            }
+
+            var query2 = new QueryExpression("kubu_submodul")
+            {
+                TopCount = 50
+            };
+
+            // Add columns to query.ColumnSet
+            query2.ColumnSet.AddColumns("kubu_name", "kubu_description", "kubu_order", "kubu_link", "kubu_criteriafornextstep");
+
+            // Add filter query.Criteria
+            query2.Criteria.AddCondition("kubu_mainmodul", ConditionOperator.Equal, this.GetAliasedAttributeAsString(mainmodule.EntityAlias + ".kubu_modulid", mainModul));
+
+            // Add orders
+            query2.AddOrder("kubu_order", OrderType.Ascending);
+
+            EntityCollection subModules = _serviceClient.RetrieveMultiple(query2);
+            unitModuleModel.SubModules = new List<CourseUnitSubModuleDTO>(); 
+
+            foreach(var subModule in subModules.Entities)
+            {
+                CourseUnitSubModuleDTO subModel = new CourseUnitSubModuleDTO();
+                subModel.Link = subModule.GetAttributeValue<string>("kubu_link");
+                if(unitModuleModel.IncludeTheory || unitModuleModel.SubModuleId == subModule.Id)
+                {
+                    subModel.Description = subModule.GetAttributeValue<string>("kubu_description");
+                    subModel.Name = subModule.GetAttributeValue<string>("kubu_name");
+                }
+
+                unitModuleModel.SubModules.Add(subModel);
+            }
+
+            return unitModuleModel; 
         }
 
-        public Task<IList<CourseUnitModuleDTO>> GetCourseUnitModules(Guid courseUnit)
+        public async Task<IList<CourseUnitModuleDTO>> GetCourseUnitModules(Guid courseUnit)
         {
-            throw new NotImplementedException();
+            var query_kubu_nurgeplant = false;
+            List<CourseUnitModuleDTO> moduleModels = new List<CourseUnitModuleDTO>();
+            // Instantiate QueryExpression query
+            var query = new QueryExpression("kubu_practicedexercise")
+            {
+                TopCount = 50
+            };
+
+            // Add columns to query.ColumnSet
+            query.ColumnSet.AddColumns("kubu_incltheory", "kubu_mainmodule", "kubu_submodule");
+
+            // Add filter query.Criteria
+            query.Criteria.AddCondition("kubu_trainingslesson", ConditionOperator.Equal, courseUnit);
+            query.Criteria.AddCondition("kubu_nurgeplant", ConditionOperator.Equal, query_kubu_nurgeplant);
+
+            // Add link-entity mainmodule
+            var mainmodule = query.AddLink("kubu_modul", "kubu_mainmodule", "kubu_modulid");
+            mainmodule.EntityAlias = "mainmodule";
+
+            // Add columns to mainmodule.Columns
+            mainmodule.Columns.AddColumns("kubu_name", "kubu_whatsitfor", "kubu_modulid");
+            EntityCollection modules = _serviceClient.RetrieveMultiple(query); 
+
+            foreach(var mod in modules.Entities)
+            {
+                CourseUnitModuleDTO model = new CourseUnitModuleDTO();
+                EntityReference mModule = mod.GetAttributeValue<EntityReference>("kubu_mainmodule");
+                model.ModuleId = mModule.Id;
+                model.Name = mModule.Name;
+                model.Description = this.GetAliasedAttributeAsString(mainmodule.EntityAlias + ".kubu_whatsitfor", mod);
+                model.IncludeTheory = mod.GetAttributeValue<bool>("kubu_incltheory");
+
+                moduleModels.Add(model);
+            }
+
+            return moduleModels;
         }
 
         public async Task<IList<CourseUnitOverviewDTO>> GetCourseUnits(Guid courseId, string email)
@@ -159,7 +273,6 @@ namespace oervmariatrost_kursbuch.Data
             var query_cre56_accordingcourse = courseId;
             var attendence_kubu_courseling = this.GetCourseMemberId(courseId, email);
             List<CourseUnitOverviewDTO> unitList = new List<CourseUnitOverviewDTO>(); 
-           
 
             // Instantiate QueryExpression query
             var query = new QueryExpression("cre56_coursehour")
@@ -225,7 +338,7 @@ namespace oervmariatrost_kursbuch.Data
             return Guid.Empty;
         }
 
-        protected string GetAttributeAsString(string key, Entity entity, bool isEntityReference = false)
+        protected string GetAliasedAttributeAsString(string key, Entity entity, bool isEntityReference = false)
         {
             if (entity.Contains(key))
             {

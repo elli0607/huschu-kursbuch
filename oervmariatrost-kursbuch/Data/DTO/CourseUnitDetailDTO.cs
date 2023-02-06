@@ -2,9 +2,9 @@
 {
     public class CourseUnitDetailDTO : CourseUnitOverviewDTO
     {
-        public string UnitDescription1 { get; set; }
-        public string UnitDescription2 { get; set; }
-        public string UnitDescription3 { get; set;}
-        public string UnitDescription4 { get; set;}
+        public string SummaryUnit { get; set; }
+        public string LearningGoal { get; set; }
+        public string ImportantExerciseTips { get; set;}
+        public string Lifehacks { get; set;}
     }
 }

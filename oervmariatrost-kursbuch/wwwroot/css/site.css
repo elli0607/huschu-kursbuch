@@ -14,12 +14,18 @@ h1:focus {
     font-variant: small-caps;
 }
 
-.nav-link:hover, .btn-link:hover {
+.nav-link:hover, .btn-link:hover, 
+.nav-link:active, .btn-link:active {
     color: grey
 }
 
 .course-unit-row {
     align-items:baseline;
+}
+
+.course-headline {
+    text-align: center; 
+    margin-bottom: 2rem;
 }
 
 .btn-primary {
@@ -90,20 +96,57 @@ h1:focus {
 }
 
 .course-card {
-    margin: 0rem 2rem;
-    border:none;
+    margin: 0rem 1.5rem;
+}
+
+.course-detail-image {
+    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.unit-detail-header {
+    font-weight:bold;
+    border-bottom: 1px solid lightgrey;
+    margin-bottom: 1rem;
 }
 
 .course-card > .card-body {
     padding: 1rem .5rem;
 }
-
     .course-card > .card-footer {
         background:none !important;
     }
 
+    .course-card > .card-title {
+        height: 5.5rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-bottom: solid lightgrey 1px;
+    }
+
+    .course-card > img {
+        width: 70%; 
+        height: auto;
+        margin-left:15%
+    }
+
+.module-card {
+    min-height: 15rem;
+}
+
+    .module-card > .card-title {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-bottom: solid lightgrey 1px;
+        height: 4rem;
+    }
+
 .btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
-  box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
+    box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
 }
 
 

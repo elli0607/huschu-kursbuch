@@ -8,16 +8,18 @@
 
 
 <div class="container-fluid mt-5">
-
     <div class="card m-3" style=" border:none">
+        <div class="row justify-content-center">
+            <h1>Modul Details - @CourseUnitModuleDto?.Name</h1>
+        </div>
         <div class="row g-0 mt-3">
             <div class="col-md-4">
                 <img src="data:image /jpeg;base64,@CourseUnitModuleDto?.Picture" class="img-fluid rounded-start" alt="...">
             </div>
             <div class="col-md-8">
                 <div class="card-body">
-                    <h5 class="card-title">@CourseUnitModuleDto?.Name</h5>
-                    <p class="card-text">@CourseUnitModuleDto?.Description</p>
+                    <h5 class="card-title">Übungsziel</h5>
+                    <p class="card-text">@((MarkupString)CourseUnitModuleDto?.Description)</p>
                 </div>
             </div>
         </div>
@@ -28,10 +30,12 @@
     @{
         int x = 0;
     }
+    <div class="row justify-content-center">
+        <h3>Übungsaufbau</h3>
+    </div>
 
-    @foreach (var submodule in CourseUnitSubModules)
+    @foreach (var submodule in CourseUnitModuleDto?.SubModules)
     {
-
         x++;
 
         <div class="row m-3 justify-content-between">
@@ -48,7 +52,7 @@
         </div>
         <div class="row justify-content-between m-3">
             <div class="col-auto">
-                <p><small class="text-muted">@submodule.Description</small></p>
+                <p><small class="text-muted">@((MarkupString)submodule.Description)</small></p>
             </div>
         </div>
         <hr />
@@ -64,6 +68,7 @@
     public string UnitId { get; set; }
     [Parameter]
     public string ModuleId { get; set; }
+    
 
     private CourseUnitModuleDTO CourseUnitModuleDto = new CourseUnitModuleDTO();
     private IList<CourseUnitSubModuleDTO> CourseUnitSubModules = new List<CourseUnitSubModuleDTO>();
@@ -72,10 +77,11 @@
     {
         var claims = (await authenticationStateTask).User.Claims.ToList();
         var authenticatedEmail = claims.FirstOrDefault(x => x.Type == "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress")?.Value;
-        CourseUnitModuleDto = await CourseDataService.GetCourseUnitModule(Guid.Parse(ModuleId));
+        CourseUnitModuleDto = await CourseDataService.GetCourseUnitModule(Guid.Parse(ModuleId), Guid.Parse(UnitId));
         await InvokeAsync(() => StateHasChanged());
-        CourseUnitSubModules = await CourseDataService.GetSubModules(Guid.Parse(ModuleId));
-        await InvokeAsync(() => StateHasChanged());
+
+        /*CourseUnitSubModules = await CourseDataService.GetSubModules(Guid.Parse(ModuleId));
+        await InvokeAsync(() => StateHasChanged());*/
     }
 
 }

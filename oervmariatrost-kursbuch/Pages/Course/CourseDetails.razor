@@ -13,7 +13,7 @@
 <div class="container-fluid">
     <div class="card m-3" style=" border:none">
         <div class="row g-0 mt-3">
-            <div class="col-md-4">
+            <div class="col-md-4 course-detail-image">
                 <img src="data:image /jpeg;base64,@Course?.Picture" class="img-fluid rounded-start" alt="...">
             </div>
             <div class="col-md-8">
@@ -123,9 +123,12 @@
         {
             NavigationManager.NavigateTo("/");
         }
-       
+
         await InvokeAsync(() => StateHasChanged());
         Units = await CourseDataService.GetCourseUnits(Guid.Parse(CourseId), authenticatedEmail);
+        Course.MyPresense = Units.Where(u => u.MyAttendenceState == 781410000).Count();
+        Course.MyAbsence = Units.Where(u => u.MyAttendenceState == 781410002).Count();
+        Course.MyExcusedAbsence = Units.Where(u => u.MyAttendenceState == 781410001).Count();
         await InvokeAsync(() => StateHasChanged());
 
     }
