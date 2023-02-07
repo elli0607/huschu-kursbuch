@@ -77,7 +77,7 @@
     {
         var claims = (await authenticationStateTask).User.Claims.ToList();
         var authenticatedEmail = claims.FirstOrDefault(x => x.Type == "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress")?.Value;
-        CourseUnitModuleDto = await CourseDataService.GetCourseUnitModule(Guid.Parse(ModuleId), Guid.Parse(UnitId));
+        CourseUnitModuleDto = await CourseDataService.GetCourseUnitModule(Guid.Parse(ModuleId), Guid.Parse(UnitId), Guid.Parse(CourseId), authenticatedEmail);
         await InvokeAsync(() => StateHasChanged());
 
         /*CourseUnitSubModules = await CourseDataService.GetSubModules(Guid.Parse(ModuleId));

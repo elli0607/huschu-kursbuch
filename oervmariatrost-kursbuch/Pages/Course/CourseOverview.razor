@@ -10,10 +10,19 @@
 
 
 <div class="justify-content-center align-content-center">
-    <h1 class="margin-header">Meine Kurse</h1>
+    
+    @if (Courses == null || !Courses.Any())
+    {
+        <h1 class="margin-header">Du hast aktuell keine Kurse gebucht</h1>
+    }
+    else
+    {
+        <h1 class="margin-header">Meine Kurse</h1>
+    }
 </div>
 <div class="mt-5">
     <div class="row row-cols-1 row-cols-md-3 g-4">
+      
         @foreach (var course in Courses)
         {
             <div class="col">

@@ -122,7 +122,7 @@
         }
         catch (Exception ex)
         {
-            NavigationManager.NavigateTo("/");
+            NavigationManager.NavigateTo("/accessDenied");
         }
 
         await InvokeAsync(() => StateHasChanged());
