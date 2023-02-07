@@ -124,7 +124,8 @@ namespace oervmariatrost_kursbuch.Data
 
             Entity course = _serviceClient.Retrieve("cre56_coursehour", courseUnit, new ColumnSet(true));
             CourseUnitDetailDTO courseUnitModel = new CourseUnitDetailDTO();
-            courseUnitModel.LearningGoal = course.GetAttributeValue<string>("cre56_homework");
+            courseUnitModel.Homework = course.GetAttributeValue<string>("cre56_homework");
+            courseUnitModel.LearningGoal = course.GetAttributeValue<string>("kubu_learninggoal");
             courseUnitModel.ImportantExerciseTips = course.GetAttributeValue<string>("cre56_importantexercisetips");
             courseUnitModel.Lifehacks = course.GetAttributeValue<string>("cre56_lifehacks");
             courseUnitModel.SummaryUnit = course.GetAttributeValue<string>("cre56_summarycourseunit");
