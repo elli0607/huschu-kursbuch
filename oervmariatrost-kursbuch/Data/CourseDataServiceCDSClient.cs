@@ -22,29 +22,12 @@ namespace oervmariatrost_kursbuch.Data
             Guid userId = systemUserResponse.UserId;
             List<CourseOverviewDTO> CourseList = new List<CourseOverviewDTO>();
 
-            
-            var query = new QueryExpression("contact");
-            query.ColumnSet.AddColumns("contactid", "fullname");
 
-            // Add filter query.Criteria
-            query.Criteria.AddCondition("kubu_loginmail", ConditionOperator.Equal, email);
-
-            // Add link-entity courseMember
-            var courseMember = query.AddLink("cre56_kursgeher", "contactid", "cre56_hundefuhrer");
-            courseMember.EntityAlias = "courseMember";
-
-            // Add columns to courseMember.Columns
-            courseMember.Columns.AddColumns(
-                "cre56_name",
-                "cre56_besuchterkurs",
-                "cre56_gefuhrterhund",
-                "kubu_payedforcoursebook",
-                "statuscode"
-            );
+            var query = Dataverse_Helper.GetCourseMemberQuery(email, Dataverse_Helper.CourseMemberAlias);
 
             // Add link-entity course
-            var course = courseMember.AddLink("cre56_kurs", "cre56_besuchterkurs", "cre56_kursid");
-            course.EntityAlias = "course";
+            var course = query.LinkEntities.Where(l => l.EntityAlias == Dataverse_Helper.CourseMemberAlias).First().AddLink(DataverseConstants.LN_Course, "cre56_besuchterkurs", "cre56_kursid");
+            course.EntityAlias = Dataverse_Helper.CourseAlias;
 
             // Add columns to course.Columns
             course.Columns.AddColumns(
@@ -58,27 +41,28 @@ namespace oervmariatrost_kursbuch.Data
                 "cre56_name",
                 "statuscode"
             );
-
-
             EntityCollection courses = _serviceClient.RetrieveMultiple(query);
 
-            foreach (var yourCourse in courses.Entities)
+            foreach (var yourCourse in courses.Entities) 
             {
+                
                 //Todo: Add to List
                 CourseOverviewDTO courseModel = new CourseOverviewDTO();
-                courseModel.CourseId = Guid.Parse(this.GetAliasedAttributeAsString(course.EntityAlias + ".cre56_kursid", yourCourse));
-                courseModel.BoughtCourseBook = bool.Parse(this.GetAliasedAttributeAsString(courseMember.EntityAlias + ".kubu_payedforcoursebook", yourCourse));
-                courseModel.DogName = this.GetAliasedAttributeAsString(courseMember.EntityAlias + ".cre56_gefuhrterhund", yourCourse, true);
-                courseModel.CourseStartDate = DateTime.Parse(this.GetAliasedAttributeAsString(course.EntityAlias + ".cre56_kursstart", yourCourse));
-                courseModel.NumberOfUnits = int.Parse(this.GetAliasedAttributeAsString(course.EntityAlias + ".cre56_einheiten", yourCourse));
-                courseModel.OverviewDescription = this.GetAliasedAttributeAsString(course.EntityAlias + ".cre56_beschreibung", yourCourse);
-                courseModel.Title = this.GetAliasedAttributeAsString(course.EntityAlias + ".cre56_name", yourCourse);
-                courseModel.UseCourseBook = bool.Parse(this.GetAliasedAttributeAsString(course.EntityAlias + ".kubu_enablecoursebook", yourCourse));
+                courseModel.CourseId = Dataverse_Helper.GetAliasedAttribute<Guid>(Dataverse_Helper.CourseAlias, "cre56_kursid", yourCourse);
+                courseModel.BoughtCourseBook = Dataverse_Helper.GetAliasedAttribute<bool>(Dataverse_Helper.CourseMemberAlias, "kubu_payedforcoursebook", yourCourse);
+                courseModel.DogName = Dataverse_Helper.GetAliasedAttribute<EntityReference>(Dataverse_Helper.CourseMemberAlias, "cre56_gefuhrterhund", yourCourse).Name;
+                courseModel.CourseStartDate = Dataverse_Helper.GetAliasedAttribute<DateTime>(Dataverse_Helper.CourseAlias, "cre56_kursstart", yourCourse);
+                courseModel.NumberOfUnits = Dataverse_Helper.GetAliasedAttribute<int>(Dataverse_Helper.CourseAlias, "cre56_einheiten", yourCourse);
+                
+                courseModel.OverviewDescription = Dataverse_Helper.GetAliasedAttribute<string>(Dataverse_Helper.CourseAlias, "cre56_beschreibung", yourCourse);
+                courseModel.Title = Dataverse_Helper.GetAliasedAttribute<string>(Dataverse_Helper.CourseAlias, "cre56_name", yourCourse);
+                courseModel.UseCourseBook = Dataverse_Helper.GetAliasedAttribute<bool>(Dataverse_Helper.CourseAlias, "kubu_enablecoursebook", yourCourse);
+                byte[] pic = Dataverse_Helper.GetAliasedAttribute<byte[]>(Dataverse_Helper.CourseAlias, "cre56_kursbildid_cre56_kursbild", yourCourse);
 
-                //has to be done in some better moon phase
-                if(yourCourse.Attributes.Contains(course.EntityAlias + ".cre56_kursbildid_cre56_kursbild"))
+                if (pic != null)
                 {
-                    courseModel.Picture = Convert.ToBase64String((byte[])yourCourse.GetAttributeValue<AliasedValue>(course.EntityAlias + ".cre56_kursbildid_cre56_kursbild").Value).ToString();
+                    //has to be done in some better moon phase
+                    courseModel.Picture = Convert.ToBase64String(pic).ToString();
                 }
 
                 CourseList.Add(courseModel);
@@ -89,14 +73,18 @@ namespace oervmariatrost_kursbuch.Data
 
         public async Task<CourseDetailDTO> GetCourseDetails(Guid courseId, string email)
         {
-            Guid courseMembId= this.GetCourseMemberId(courseId, email);
+            var cmQuery = Dataverse_Helper.GetCourseMemberIdQuery(courseId, email);
+            var result = _serviceClient.RetrieveMultiple(cmQuery);
+
+            Guid courseMembId = result.Entities.Count > 0 ? result.Entities.First().Id : Guid.Empty;
+            
             if (courseMembId == Guid.Empty)
             {
                 throw new Exception("This is not a nice move");
             }
 
             CourseDetailDTO courseDetail = new CourseDetailDTO();
-            QueryExpression query = new QueryExpression("cre56_kurs");
+            QueryExpression query = new QueryExpression(DataverseConstants.LN_Course);
             query.ColumnSet.AddColumns(
             "cre56_kursid",
             "cre56_name",
@@ -151,8 +139,22 @@ namespace oervmariatrost_kursbuch.Data
             courseUnitModel.SummaryUnit = course.GetAttributeValue<string>("cre56_summarycourseunit");
             courseUnitModel.Name = course.GetAttributeValue<string>("cre56_unittitle");
 
-            Guid courseMemberId = this.GetCourseMemberId(course.GetAttributeValue<EntityReference>("cre56_accordingcourse").Id, email);
+            var courseId = course.GetAttributeValue<EntityReference>("cre56_accordingCourse").Id;
+            var cmQuery = Dataverse_Helper.GetCourseMemberIdQuery(courseId, email);
+            var result = _serviceClient.RetrieveMultiple(cmQuery);
+            Guid courseMembId = result.Entities.Count > 0 ? result.Entities.First().Id : Guid.Empty;
 
+            var attQuery = new QueryExpression(DataverseConstants.LN_CourseAttendence);
+
+            // Add columns to query.ColumnSet
+            attQuery.ColumnSet.AddColumn("kubu_anwesenheitsstatus");
+
+            // Add filter query.Criteria
+            attQuery.Criteria.AddCondition("kubu_kurseinheit", ConditionOperator.Equal, courseUnit);
+            attQuery.Criteria.AddCondition("kubu_courseling", ConditionOperator.Equal, courseMembId);
+
+            EntityCollection att = _serviceClient.RetrieveMultiple(attQuery);
+            courseUnitModel.MyAttendenceState = att.Entities.Count > 0 ? att.Entities.First().GetAttributeValue<long>("kubu_anwesenheitsstatus") : (long)DataverseConstants.CourseAttencendeState.Abwesend;
             return courseUnitModel;
         }
 
@@ -232,10 +234,7 @@ namespace oervmariatrost_kursbuch.Data
             var query_kubu_nurgeplant = false;
             List<CourseUnitModuleDTO> moduleModels = new List<CourseUnitModuleDTO>();
             // Instantiate QueryExpression query
-            var query = new QueryExpression("kubu_practicedexercise")
-            {
-                TopCount = 50
-            };
+            var query = new QueryExpression(DataverseConstants.LN_PracticedEx);
 
             // Add columns to query.ColumnSet
             query.ColumnSet.AddColumns("kubu_incltheory", "kubu_mainmodule", "kubu_submodule");
@@ -269,16 +268,16 @@ namespace oervmariatrost_kursbuch.Data
 
         public async Task<IList<CourseUnitOverviewDTO>> GetCourseUnits(Guid courseId, string email)
         {
+            List<CourseUnitOverviewDTO> unitList = new List<CourseUnitOverviewDTO>();
+
             var query_statuscode = 781410002; //Freigegeben
             var query_cre56_accordingcourse = courseId;
-            var attendence_kubu_courseling = this.GetCourseMemberId(courseId, email);
-            List<CourseUnitOverviewDTO> unitList = new List<CourseUnitOverviewDTO>(); 
+            var cmQuery = Dataverse_Helper.GetCourseMemberIdQuery(courseId, email);
+            var memRes = _serviceClient.RetrieveMultiple(cmQuery);
 
-            // Instantiate QueryExpression query
-            var query = new QueryExpression("cre56_coursehour")
-            {
-                TopCount = 50
-            };
+            Guid courseMembId = memRes.Entities.Count > 0 ? Dataverse_Helper.GetAliasedAttribute<Guid>(Dataverse_Helper.CourseMemberAlias, "cre56_kursgeherid", memRes.Entities.First()) : Guid.Empty;
+
+            var query = new QueryExpression(DataverseConstants.LN_CourseHour);
 
             // Add columns to query.ColumnSet
             query.ColumnSet.AddColumns("statuscode", "cre56_unittitle", "cre56_summarycourseunit","cre56_courseunitdate");
@@ -295,7 +294,7 @@ namespace oervmariatrost_kursbuch.Data
             attendence.Columns.AddColumn("kubu_anwesenheitsstatus");
 
             // Add filter attendence.LinkCriteria
-            attendence.LinkCriteria.AddCondition("kubu_courseling", ConditionOperator.Equal, attendence_kubu_courseling);
+            attendence.LinkCriteria.AddCondition("kubu_courseling", ConditionOperator.Equal, courseMembId);
 
             EntityCollection result = _serviceClient.RetrieveMultiple(query);
 
@@ -353,37 +352,6 @@ namespace oervmariatrost_kursbuch.Data
 
             return "";
         }
-        protected Guid GetCourseMemberId(Guid courseId, string email)
-        {
-            // Instantiate QueryExpression query
-            var query = new QueryExpression("contact")
-            {
-                TopCount = 50
-            };
-
-            // Add columns to query.ColumnSet
-            query.ColumnSet.AddColumn("kubu_loginmail");
-
-            // Add filter query.Criteria
-            query.Criteria.AddCondition("kubu_loginmail", ConditionOperator.Equal, email);
-
-            // Add link-entity kursgeher
-            var kursgeher = query.AddLink("cre56_kursgeher", "contactid", "cre56_hundefuhrer");
-            kursgeher.EntityAlias = "kursgeher";
-
-            // Add columns to kursgeher.Columns
-            kursgeher.Columns.AddColumns("cre56_hundefuhrer", "cre56_name", "cre56_kursgeherid");
-
-            // Add filter kursgeher.LinkCriteria
-            kursgeher.LinkCriteria.AddCondition("cre56_besuchterkurs", ConditionOperator.Equal, courseId.ToString());
-
-            var result = _serviceClient.RetrieveMultiple(query);
-            if (result.Entities != null && result.Entities.Count > 0)
-            {
-                return (Guid)result.Entities.First().GetAttributeValue<AliasedValue>(kursgeher.EntityAlias+".cre56_kursgeherid").Value;
-            }
-
-            return Guid.Empty;
-        }
+        
     }
 }
