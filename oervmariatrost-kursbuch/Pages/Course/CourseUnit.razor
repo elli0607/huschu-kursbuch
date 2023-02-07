@@ -125,7 +125,6 @@
         await InvokeAsync(() => StateHasChanged());
         CourseUnitModules = await CourseDataService.GetCourseUnitModules(Guid.Parse(UnitId), Guid.Parse(CourseId), authenticatedEmail);
         await InvokeAsync(() => StateHasChanged());
-        Console.WriteLine(CourseDetails.MyAttendenceState);
     }
 
 }
