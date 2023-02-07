@@ -139,7 +139,7 @@ namespace oervmariatrost_kursbuch.Data
             courseUnitModel.SummaryUnit = course.GetAttributeValue<string>("cre56_summarycourseunit");
             courseUnitModel.Name = course.GetAttributeValue<string>("cre56_unittitle");
 
-            var courseId = course.GetAttributeValue<EntityReference>("cre56_accordingCourse").Id;
+            var courseId = course.GetAttributeValue<EntityReference>("cre56_accordingcourse").Id;
             var cmQuery = Dataverse_Helper.GetCourseMemberIdQuery(courseId, email);
             var result = _serviceClient.RetrieveMultiple(cmQuery);
             Guid courseMembId = result.Entities.Count > 0 ? result.Entities.First().Id : Guid.Empty;
