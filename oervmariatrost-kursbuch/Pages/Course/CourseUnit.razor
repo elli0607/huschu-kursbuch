@@ -11,6 +11,26 @@
         <h1 class="justify-content-center">@CourseDetails.Name</h1>
     </div>
 
+    <div class="row justify-content-between m-3 mb-5">
+        <div class="col-auto">
+            @switch (CourseDetails?.MyAttendenceState)
+            {
+                case 781410000:
+                    <h5> <i class="fa-solid fa-dog"></i> Anwesend</h5>
+                    break;
+                case 781410001:
+                    <h5> <i class="fa-solid fa-handshake"></i> Entschuldigt</h5>
+                    break;
+                case 781410002:
+                    <h5> <i class="fa-solid fa-gavel"></i> Abwesend</h5>
+                    break;
+                default:
+                    <h5> <i class="fa-solid fa-gavel"></i> Abwesend</h5>
+                    break;
+            }
+        </div>
+    </div>
+
     <div class="accordion" id="accordionExample">
         <div class="accordion-item">
             <h2 class="accordion-header" id="headingOne">
@@ -62,47 +82,6 @@
         </div>
     </div>
 
-    <!--<div class="row m-4">
-        <div class="col-12 unit-detail-header">
-            Ablauf der Einheit
-        </div>
-        <div class="col-12">
-            <p>
-                @((MarkupString)CourseDetails?.SummaryUnit)
-            </p>
-        </div>
-    </div>
-    <div class="row m-4">
-        <div class="col-12 unit-detail-header">
-            Lernziel der Einheit
-        </div>
-        <div class="col-12">
-            <p>
-                @((MarkupString)CourseDetails?.LearningGoal)
-            </p>
-        </div>
-    </div>
-    <div class="row m-4">
-        <div class="col-12 unit-detail-header">
-            Nützliche Trainings-Tipps
-        </div>
-        <div class="col-12">
-            <p>
-                @((MarkupString)CourseDetails?.ImportantExerciseTips)
-            </p>
-        </div>
-    </div>
-    <div class="row m-4">
-        <div class="col-12 unit-detail-header">
-            Alltags-Tipps
-        </div>
-        <div class="col-12">
-            <p>
-                @((MarkupString)CourseDetails?.Lifehacks)
-            </p>
-        </div>
-    </div>-->
-
     <div class="row justify-content-center  course-headline">
         <div class="col-12"><h2> Module </h2></div>
         <div class="col-12 justify-content-center">Folgende Module wurden besprochen:</div>
@@ -146,6 +125,7 @@
         await InvokeAsync(() => StateHasChanged());
         CourseUnitModules = await CourseDataService.GetCourseUnitModules(Guid.Parse(UnitId));
         await InvokeAsync(() => StateHasChanged());
+        Console.WriteLine(CourseDetails.MyAttendenceState);
     }
 
 }

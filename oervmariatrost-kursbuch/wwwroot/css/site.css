@@ -190,3 +190,12 @@ h1:focus {
     .blazor-error-boundary::after {
         content: "An error has occurred."
     }
+
+.accordion-button:not(.collapsed) {
+    color: #EA9B32;
+    background-color: white;
+}
+
+.accordion-button:focus {
+    border-color: white;
+}
