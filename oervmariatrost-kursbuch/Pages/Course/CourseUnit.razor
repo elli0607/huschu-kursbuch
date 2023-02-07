@@ -11,7 +11,7 @@
         <h1 class="justify-content-center">@CourseDetails.Name</h1>
     </div>
 
-    <div class="row justify-content-between m-3 mb-5">
+    <div class="row justify-content-between m-3">
         <div class="col-auto">
             @switch (CourseDetails?.MyAttendenceState)
             {
@@ -28,6 +28,13 @@
                     <h5> <i class="fa-solid fa-gavel"></i> Abwesend</h5>
                     break;
             }
+        </div>
+    </div>
+
+    <div class="row justify-content-between m-3">
+        <div class="col-auto">
+            <h5>Hausübung</h5>
+            @((MarkupString)CourseDetails?.Homework)
         </div>
     </div>
 
