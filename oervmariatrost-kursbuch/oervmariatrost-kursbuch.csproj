@@ -12,4 +12,16 @@
     <PackageReference Include="Microsoft.PowerPlatform.Dataverse.Client" Version="1.0.26" />
   </ItemGroup>
 
+  <ItemGroup>
+    <EditorConfigFiles Remove="D:\Hundeschule\Projects\huschu-kursbuch\oervmariatrost-kursbuch\.editorconfig" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Remove=".editorconfig" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EditorConfigFiles Remove="D:\Hundeschule\Projects\huschu-kursbuch\oervmariatrost-kursbuch\.editorconfig" />
+  </ItemGroup>
+
 </Project>
