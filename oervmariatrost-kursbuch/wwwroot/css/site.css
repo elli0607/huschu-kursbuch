@@ -24,7 +24,7 @@ h1:focus {
 
 .index-content {
     width: 100%;
-    padding: 2.5rem;
+    padding: 0rem 2.5rem;
     text-align: center;
     flex-wrap: nowrap;
     justify-content: center;
@@ -138,8 +138,8 @@ h1:focus {
     }
 
     .margin-header {
-        padding: 2.5rem;
-        margin: 0rem !important;
+        padding: 0rem;
+        margin-top: 5.5rem;
         //background-color: rgba(255,255,255,0.8);
         //border-radius: 20px;
     }
