@@ -143,9 +143,22 @@ h1:focus {
 }
 
 .course-card {
-    margin: 0rem 1.5rem;
+    margin: 0rem auto;
     border-radius: 10px;
     background-color: rgba(255,255,255,0.8);
+    max-width: 500px;
+}
+
+.card-container {
+    width: 80%;
+    margin: auto;
+    justify-content: center;
+}
+
+@media (min-width: 768px) {
+    .course-detail-container {
+        width: 80%;
+    }
 }
 
 .course-detail-image {
@@ -187,13 +200,17 @@ h1:focus {
     min-height: 15rem;
 }
 
-    .module-card > .card-title {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        border-bottom: solid lightgrey 1px;
-        height: 4rem;
-    }
+.module-card-container {
+    justify-content: center;
+}
+
+.module-card > .card-title {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-bottom: solid lightgrey 1px;
+    height: 4rem;
+}
 
 .btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
     box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
@@ -244,11 +261,13 @@ h1:focus {
 .accordion-button:not(.collapsed) {
     color: #EA9B32;
     background-color: white;
+    box-shadow: none;
 }
 
 .accordion-button:focus {
     border-color: white;
     box-shadow: inset 0 -1px 0 rgb(0 0 0 / 13%);
+    box-shadow: none;
 }
 
 .col-auto {
@@ -267,6 +286,10 @@ h1:focus {
 
 .h1, h1 {
     text-align: center;
+}
+
+.h2, h2 {
+    margin: 0;
 }
 
 @media (max-width: 992px) {
