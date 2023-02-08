@@ -8,6 +8,7 @@ using Microsoft.PowerPlatform.Dataverse.Client;
 using Microsoft.Xrm.Sdk;
 using Newtonsoft.Json.Linq;
 using oervmariatrost_kursbuch.Data;
+using oervmariatrost_kursbuch.Data.UserDataManagement;
 using System.Net;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -16,6 +17,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddRazorPages();
 builder.Services.AddServerSideBlazor();
 builder.Services.AddScoped<ICourseDataService, CourseDataServiceCDSClient>();
+builder.Services.AddSingleton<UserSessionDataService>(); 
 //builder.Services.AddScoped<ICourseDataService, CourseDataServiceMock>();
 
 

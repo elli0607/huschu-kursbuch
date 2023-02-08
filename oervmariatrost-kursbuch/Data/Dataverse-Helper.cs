@@ -38,12 +38,10 @@ namespace oervmariatrost_kursbuch.Data
 
             // Add columns to courseMember.Columns
             courseMember.Columns.AddColumns(
-                "cre56_name",
                 "cre56_besuchterkurs",
                 "cre56_gefuhrterhund",
                 "kubu_payedforcoursebook",
-                "statuscode",
-                "cre56_kursgeherid"
+                "statuscode"
             );
 
             return query;
