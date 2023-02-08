@@ -17,6 +17,10 @@
     height:37px;
 }
 
+.navbar > .container-fluid {
+    background: none !important;
+}
+
 .nav-link {
     color:white !important;
 }

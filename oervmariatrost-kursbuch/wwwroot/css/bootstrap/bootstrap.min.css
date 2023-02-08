@@ -102,7 +102,6 @@ hr {
     }
 
 .h1, .h2, .h3, .h4, .h5, .h6, h1, h2, h3, h4, h5, h6 {
-    margin-top: .5rem;
     margin-bottom: .5rem;
     font-weight: 500;
     line-height: 1.2;
@@ -610,7 +609,9 @@ progress {
     padding-right: var(--bs-gutter-x,.75rem);
     padding-left: var(--bs-gutter-x,.75rem);
     margin-right: auto;
-    margin-left: auto
+    margin-left: auto;
+    background-color: rgba(255,255,255,0.8);
+    //border-radius: 10px;
 }
 
 @media (min-width:576px) {
@@ -3245,7 +3246,8 @@ textarea.form-control-lg {
 
 .btn-outline-primary {
     color: #ea9b32;
-    border-color: #ea9b32
+    border-color: #ea9b32;
+    font-weight: bold;
 }
 
     .btn-outline-primary:hover {
@@ -4641,7 +4643,7 @@ textarea.form-control-lg {
     flex-direction: column;
     min-width: 0;
     word-wrap: break-word;
-    background-color: #fff;
+    //background-color: #fff;
     background-clip: border-box;
     border: 1px solid rgba(0,0,0,.125);
     border-radius: .25rem
@@ -4806,6 +4808,7 @@ textarea.form-control-lg {
     width: 100%;
     padding: 1rem 1.25rem;
     font-size: 1rem;
+    font-weight:bold;
     color: #212529;
     text-align: left;
     background-color: #fff;
@@ -4862,7 +4865,8 @@ textarea.form-control-lg {
 }
 
 .accordion-header {
-    margin-bottom: 0
+    margin-bottom: 0;
+    background-color: grey;
 }
 
 .accordion-item {
