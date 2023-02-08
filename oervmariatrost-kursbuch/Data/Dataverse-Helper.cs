@@ -30,7 +30,7 @@ namespace oervmariatrost_kursbuch.Data
             query.ColumnSet.AddColumns("contactid", "fullname");
 
             // Add filter query.Criteria
-            query.Criteria.AddCondition("kubu_loginmail", ConditionOperator.Equal, userMail);
+            query.Criteria.AddCondition("emailaddress1", ConditionOperator.Equal, userMail);
 
             // Add link-entity courseMember
             var courseMember = query.AddLink(DataverseConstants.LN_CourseMember, "contactid", "cre56_hundefuhrer");
