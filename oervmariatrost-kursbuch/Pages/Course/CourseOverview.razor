@@ -12,47 +12,38 @@
 
 
 <div class="justify-content-center align-content-center">
-    
-    @if (Courses == null || !Courses.Any())
-    {
-        <h1 class="margin-header">Du hast aktuell keine Kurse gebucht</h1>
-    }
-    else
-    {
-        <h1 class="margin-header">Meine Kurse</h1>
-    }
+    <h1 class="margin-header">Meine Kurse</h1>
 </div>
-<div class="mt-5">
-    <div class="row row-cols-1 row-cols-md-3 g-4">
-      
-        @foreach (var course in Courses)
-        {
-            <div class="col">
-                <div class="card h-100 course-card">
-                    <div class="card-title">
-                        <h3>@course.Title</h3>
-                    </div>
-                    <img src="data:image/jpeg;base64,@course.Picture" class="card-img-top" alt="...">
-                    <div class="card-body">
-                        <p class="card-text fw-bold">Hund: @course.DogName</p>
-                        <p class="card-text">@course.OverviewDescription</p>
-                        <div class="row org-details">
-                            <div class="col-md-8">
-                                <p class="card-text">Kursstart @course.CourseStartDate.ToString("dd.MM.yyyy HH:mm")</p>
-                            </div>
-                            <div class="col-md-4">
-                                <p class="card-text right-align">@course.NumberOfUnits Einheiten</p>
-                            </div>
+
+<div class="row row-cols-1 row-cols-md-2 g-4 card-container">
+    @foreach (var course in Courses)
+    {
+        <div class="col">
+            <div class="card h-100 course-card">
+                <div class="card-title">
+                    <h3>@course.Title</h3>
+                </div>
+                <img src="data:image/jpeg;base64,@course.Picture" class="card-img-top" alt="...">
+                <div class="card-body">
+                    <p class="card-text fw-bold">Hund: @course.DogName</p>
+                    <p class="card-text">@course.OverviewDescription</p>
+                    <div class="row org-details">
+                        <div class="col-md-8">
+                            <p class="card-text">Kursstart @course.CourseStartDate.ToString("dd.MM.yyyy HH:mm")</p>
+                        </div>
+                        <div class="col-md-4">
+                            <p class="card-text right-align">@course.NumberOfUnits Einheiten</p>
                         </div>
                     </div>
-                    <div class="card-footer">
-                        <a href="/courses/@course.CourseId" class="btn btn-outline-primary @(course.UseCourseBook && course.BoughtCourseBook ? "" : "disabled")">Zum Kursbuch</a>
-                    </div>
+                </div>
+                <div class="card-footer">
+                    <a href="/courses/@course.CourseId" class="btn btn-outline-primary @(course.UseCourseBook && course.BoughtCourseBook ? "" : "disabled")">Zum Kursbuch</a>
                 </div>
             </div>
-        }
-    </div>
+        </div>
+    }
 </div>
+
 
 
 @code {
