@@ -1,6 +1,35 @@
 ﻿@inherits LayoutComponentBase
 
-<div class="top-row ps-3 navbar navbar-dark">
+<nav class="navbar navbar-expand-lg nav-bar-bg">
+    <div class="container-fluid">
+        
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav">
+                <li class="nav-item">
+                    <a class="nav-link" aria-current="page" href=""><img src="logo.png" class="header-logo nav-icon" /> Home</a>
+                </li>
+                <AuthorizeView>
+                    <Authorized>
+                        <li class="nav-item">
+                            <a class="nav-link" href="courses"><i class="fa-solid fa-graduation-cap nav-icon"></i>Meine Kurse</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="fetchdata"><span class="oi oi-list-rich" aria-hidden="true"></span> Platzhalter ?</a>
+                        </li>
+                    </Authorized>
+                </AuthorizeView>
+            </ul>
+        </div>
+        <div class="justify-content-end">
+            <LoginDisplay /> <!-- Add this -->
+        </div>
+    </div>
+</nav>
+
+@*<div class="top-row ps-3 navbar navbar-dark">
     <div class="container-fluid justify-content-between">
         <button title="Navigation menu" class="navbar-toggler" @onclick="ToggleNavMenu">
             <span class="navbar-toggler-icon"></span>
@@ -32,7 +61,7 @@
             <LoginDisplay /> <!-- Add this -->
         </div>
     </div>
-</div>
+</div>*@
 
 
 
