@@ -35,7 +35,12 @@ namespace oervmariatrost_kursbuch.Data
             this.RequestContactForLoginMail(email);
             this.SetCoursesForLoggedInUser();
         }
+        public string GetFullNameForLoginMail(string email)
+        {
 
+            this.RequestContactForLoginMail(email);
+            return _userSessionData.FullName;
+        }
         private void RequestContactForLoginMail(string email)
         {
             DVContact contact = new DVContact();
@@ -78,7 +83,7 @@ namespace oervmariatrost_kursbuch.Data
                         BoughtCourseBook = courseMemberEntity.GetAttributeValue<bool>(courseMember.PayedForCoursebook),
                         CourseId = courseMemberEntity.GetAttributeValue<EntityReference>(courseMember.Course).Id,
                         CourseMemberId = courseMemberEntity.Id,
-                        DogName = courseMemberEntity.GetAttributeValue<EntityReference>(courseMember.Dog).Name
+                        DogName = courseMemberEntity.GetAttributeValue<EntityReference>(courseMember.Dog)?.Name
                     };
 
                     CourseToCoursememberId.Add(details);

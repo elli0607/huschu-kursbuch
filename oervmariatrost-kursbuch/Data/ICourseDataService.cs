@@ -5,6 +5,7 @@ namespace oervmariatrost_kursbuch.Data
     public interface ICourseDataService
     {
         Task InitializeUserData(string email);
+        string GetFullNameForLoginMail(string email);
         Task<IList<CourseOverviewDTO>> GetAvailableCourses(string email);
         Task<CourseDetailDTO> GetCourseDetails(Guid courseId, string email);
         Task<IList<CourseUnitOverviewDTO>> GetCourseUnits(Guid courseId);
