@@ -307,8 +307,7 @@ namespace oervmariatrost_kursbuch.Data
             var query2 = new QueryExpression(dVSubModuleHelper.LogicalName);
             query2.ColumnSet.AddColumns(dVSubModuleHelper.GetAllLogicalNamesForEntityFields());
 
-            // Add filter query.Criteria
-            query2.Criteria.AddCondition(dvMainModuleHelper.LogicalName, ConditionOperator.Equal, this.GetAliasedAttributeAsString(mainmodule.EntityAlias + ".kubu_modulid", mainModul));
+            query2.Criteria.AddCondition(dVSubModuleHelper.MainModule, ConditionOperator.Equal, moduleId);
 
             // Add orders
             query2.AddOrder(dVSubModuleHelper.Order, OrderType.Ascending);
