@@ -3,8 +3,10 @@
 
 @using oervmariatrost_kursbuch.Data;
 @using oervmariatrost_kursbuch.Data.DTO;
+@using oervmariatrost_kursbuch.Data.UserDataManagement;
 @inject NavigationManager NavigationManager
 @inject ICourseDataService CourseDataService;
+@inject UserSessionDataService UserDataService;
 @inherits LayoutComponentBase
 
 
@@ -55,6 +57,7 @@
     {
         var claims = (await authenticationStateTask).User.Claims.ToList();
         var authenticatedEmail = claims.FirstOrDefault(x => x.Type == "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress")?.Value;
+        var test = CourseDataService.InitializeUserData(authenticatedEmail);
         Courses = await CourseDataService.GetAvailableCourses(authenticatedEmail);
         foreach(var course in Courses)
         {

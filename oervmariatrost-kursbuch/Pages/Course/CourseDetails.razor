@@ -126,13 +126,12 @@
         }
 
         await InvokeAsync(() => StateHasChanged());
-        Units = await CourseDataService.GetCourseUnits(Guid.Parse(CourseId), authenticatedEmail);
+        Units = await CourseDataService.GetCourseUnits(Guid.Parse(CourseId));
         Course.MyPresense = Units.Where(u => u.MyAttendenceState == 781410000).Count();
         Course.MyAbsence = Units.Where(u => u.MyAttendenceState == 781410002).Count();
         Course.MyExcusedAbsence = Units.Where(u => u.MyAttendenceState == 781410001).Count();
         Course.Picture = Course.Picture == null ? "kurs.jpg" : "data:image/jpeg;base64," + Course.Picture;
         await InvokeAsync(() => StateHasChanged());
-
     }
 
 }

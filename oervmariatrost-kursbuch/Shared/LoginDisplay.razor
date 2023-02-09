@@ -1,4 +1,7 @@
-﻿<AuthorizeView>
+﻿@using oervmariatrost_kursbuch.Data.UserDataManagement;
+@inject UserSessionDataService userData
+
+<AuthorizeView>
     <Authorized>
         <div class="row">
             <div class="col-auto hide-login-name">

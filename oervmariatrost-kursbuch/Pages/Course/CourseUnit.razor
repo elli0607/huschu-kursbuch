@@ -4,7 +4,7 @@
 @using oervmariatrost_kursbuch.Data;
 @using oervmariatrost_kursbuch.Data.DTO;
 @inject NavigationManager NavigationManager
-@inject ICourseDataService CourseDataService;
+@inject ICourseDataService CourseDataService
 
 <div class="container-fluid course-detail-container">
     <div class="row justify-content-center">
@@ -128,7 +128,7 @@
     {
         var claims = (await authenticationStateTask).User.Claims.ToList();
         var authenticatedEmail = claims.FirstOrDefault(x => x.Type == "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress")?.Value;
-        CourseDetails = await CourseDataService.GetCourseUnit(Guid.Parse(UnitId), Guid.Parse(CourseId), authenticatedEmail);
+        CourseDetails = await CourseDataService.GetCourseUnit(Guid.Parse(UnitId), Guid.Parse(CourseId));
         await InvokeAsync(() => StateHasChanged());
         CourseUnitModules = await CourseDataService.GetCourseUnitModules(Guid.Parse(UnitId), Guid.Parse(CourseId), authenticatedEmail);
         await InvokeAsync(() => StateHasChanged());

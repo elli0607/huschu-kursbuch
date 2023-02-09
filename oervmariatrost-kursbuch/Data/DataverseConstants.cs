@@ -8,6 +8,7 @@
         public static string LN_CourseHour = "cre56_coursehour";
         public static string LN_PracticedEx = "kubu_practicedexercise";
         public static string LN_CourseAttendence = "kubu_coursattendence";
+        public static string LN_MainModule = "kubu_modul";
 
         public enum CourseAttencendeState
         {
@@ -15,5 +16,10 @@
             Entschuldigt = 781410001, 
             Abwesend = 781410002
         }
+
+        public static int ApprovedCourseHour = 781410002;
+
+        public static string AttendenceAlias = "attencence";
+        public static string MainModuleAlias = "mainmodule";
     }
 }

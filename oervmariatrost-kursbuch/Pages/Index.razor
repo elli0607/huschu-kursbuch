@@ -1,4 +1,9 @@
 ﻿@page "/"
+@using oervmariatrost_kursbuch.Data;
+@using oervmariatrost_kursbuch.Data.DTO;
+@using oervmariatrost_kursbuch.Data.UserDataManagement;
+@inject ICourseDataService CourseDataService;
+@inject UserSessionDataService UserDataService;
 
 <PageTitle>Kursbuch - Hundeschule ÖRV Mariatrost</PageTitle>
 <div class="index-content">
@@ -32,3 +37,22 @@
         </div>
     </div>
 </div>
+
+@code {
+    [CascadingParameter]
+    private Task<AuthenticationState> authenticationStateTask { get; set; }
+
+    protected async override Task OnInitializedAsync()
+    {
+        var claims = (await authenticationStateTask).User.Claims.ToList();
+        var authenticatedEmail = claims.FirstOrDefault(x => x.Type == "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress")?.Value;
+        if(authenticatedEmail != string.Empty)
+        {
+            var test = CourseDataService.InitializeUserData(authenticatedEmail);
+
+        }
+        await InvokeAsync(() => StateHasChanged());
+    }
+
+
+}
