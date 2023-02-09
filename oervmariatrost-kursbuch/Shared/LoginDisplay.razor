@@ -1,11 +1,10 @@
-﻿@using oervmariatrost_kursbuch.Data.UserDataManagement;
-@inject UserSessionDataService userData
-
+﻿@using oervmariatrost_kursbuch.Data;
+@inject ICourseDataService cdsDataClient;
 <AuthorizeView>
     <Authorized>
         <div class="row">
             <div class="col-auto hide-login-name">
-                <div class="user-text"> Hallo, @context.User.Identity.Name!</div>
+                <div class="user-text"> Hallo,@FullName </div>
             </div>
             <div class="col-auto hide-login-name">
 
@@ -21,3 +20,22 @@
         <a href="Account/Login" class="nav-link login-button"><i class="fa-solid fa-arrow-right-to-bracket nav-icon"></i>Einloggen</a>
     </NotAuthorized>
 </AuthorizeView>
+
+@code {
+    [CascadingParameter]
+    private Task<AuthenticationState> authenticationStateTask { get; set; }
+
+    public string FullName = "";
+    protected async override Task OnInitializedAsync()
+    {
+        var user = (await authenticationStateTask).User;
+        if (user.Identity.IsAuthenticated)
+        {
+            var claims = (await authenticationStateTask).User.Claims.ToList();
+            var authenticatedEmail = claims.FirstOrDefault(x => x.Type == "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress")?.Value;
+            FullName = cdsDataClient.GetFullNameForLoginMail(authenticatedEmail);
+            await InvokeAsync(() => StateHasChanged());
+        }
+    }
+
+}
