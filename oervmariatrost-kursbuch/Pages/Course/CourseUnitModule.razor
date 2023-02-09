@@ -14,7 +14,7 @@
         </div>
         <div class="row g-0 mt-3">
             <div class="col-md-4">
-                <img src="data:image /jpeg;base64,@CourseUnitModuleDto?.Picture" class="img-fluid rounded-start" alt="...">
+                <img src="@CourseUnitModuleDto?.Picture" class="img-fluid rounded-start module-image" alt="...">
             </div>
             <div class="col-md-8">
                 <div class="card-body">
@@ -68,7 +68,7 @@
     public string UnitId { get; set; }
     [Parameter]
     public string ModuleId { get; set; }
-    
+
 
     private CourseUnitModuleDTO CourseUnitModuleDto = new CourseUnitModuleDTO();
     private IList<CourseUnitSubModuleDTO> CourseUnitSubModules = new List<CourseUnitSubModuleDTO>();
@@ -78,6 +78,7 @@
         var claims = (await authenticationStateTask).User.Claims.ToList();
         var authenticatedEmail = claims.FirstOrDefault(x => x.Type == "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress")?.Value;
         CourseUnitModuleDto = await CourseDataService.GetCourseUnitModule(Guid.Parse(ModuleId), Guid.Parse(UnitId), Guid.Parse(CourseId), authenticatedEmail);
+        CourseUnitModuleDto.Picture = CourseUnitModuleDto.Picture == null ? CourseUnitModuleDto.Picture = "dog.svg" : "data:image /jpeg;base64," + CourseUnitModuleDto.Picture;
         await InvokeAsync(() => StateHasChanged());
 
         /*CourseUnitSubModules = await CourseDataService.GetSubModules(Guid.Parse(ModuleId));

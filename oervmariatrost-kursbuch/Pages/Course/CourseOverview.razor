@@ -21,7 +21,7 @@
                 <div class="card-title">
                     <h3>@course.Title</h3>
                 </div>
-                <img src="data:image/jpeg;base64,@course.Picture" class="card-img-top" alt="...">
+                <img src="@course.Picture" class="card-img-top" alt="...">
                 <div class="card-body">
                     <p class="card-text fw-bold">Hund: @course.DogName</p>
                     <p class="card-text">@course.OverviewDescription</p>
@@ -56,6 +56,10 @@
         var claims = (await authenticationStateTask).User.Claims.ToList();
         var authenticatedEmail = claims.FirstOrDefault(x => x.Type == "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress")?.Value;
         Courses = await CourseDataService.GetAvailableCourses(authenticatedEmail);
+        foreach(var course in Courses)
+        {
+            course.Picture = course.Picture == null ? "kurs.jpg" : "data:image/jpeg;base64," + course.Picture;
+        }
         await InvokeAsync(() => StateHasChanged());
     }
 
