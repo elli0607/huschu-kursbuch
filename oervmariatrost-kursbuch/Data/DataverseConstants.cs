@@ -9,6 +9,8 @@
         public static string LN_PracticedEx = "kubu_practicedexercise";
         public static string LN_CourseAttendence = "kubu_coursattendence";
         public static string LN_MainModule = "kubu_modul";
+        public static string LN_SubModule = "kubu_submodul";
+
 
         public enum CourseAttencendeState
         {

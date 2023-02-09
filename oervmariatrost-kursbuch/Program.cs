@@ -17,7 +17,8 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddRazorPages();
 builder.Services.AddServerSideBlazor();
 builder.Services.AddScoped<ICourseDataService, CourseDataServiceCDSClient>();
-builder.Services.AddSingleton<UserSessionDataService>(); 
+builder.Services.AddScoped<UserSessionDataService>();
+
 //builder.Services.AddScoped<ICourseDataService, CourseDataServiceMock>();
 
 

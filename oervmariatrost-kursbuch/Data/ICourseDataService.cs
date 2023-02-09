@@ -11,6 +11,5 @@ namespace oervmariatrost_kursbuch.Data
         Task<CourseUnitDetailDTO> GetCourseUnit(Guid courseUnit, Guid courseId);
         Task<IList<CourseUnitModuleDTO>> GetCourseUnitModules(Guid courseUnit, Guid courseId, string email);
         Task<CourseUnitModuleDTO> GetCourseUnitModule(Guid moduleId, Guid courseUnitId, Guid courseId, string email);
-
     }
 }

@@ -42,16 +42,16 @@
             <h5><i class="fa-solid fa-gavel"></i> Abwesend: <small class="text-muted">@Course?.MyAbsence / @Course?.TotalUnits</small></h5>
         </div>
     </div>
-    <hr/>
+    <hr />
     @{
         int x = 0;
     }
 
     @foreach (var unit in Units)
     {
-       
-            x++;
-        
+
+        x++;
+
         <div class="row m-3 justify-content-between course-unit-row">
             <div class="col-md-1">
                 <h2><bold>@x</bold></h2>
@@ -94,11 +94,11 @@
                     </div>
                 </div>
             </div>
-            
+
         </div>
-        
-       
-        <hr/>
+
+
+        <hr />
     }
 
 </div>
@@ -116,22 +116,23 @@
     {
         var claims = (await authenticationStateTask).User.Claims.ToList();
         var authenticatedEmail = claims.FirstOrDefault(x => x.Type == "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress")?.Value;
-        try 
+        try
         {
             Course = await CourseDataService.GetCourseDetails(Guid.Parse(CourseId), authenticatedEmail);
+            await InvokeAsync(() => StateHasChanged());
+            Units = await CourseDataService.GetCourseUnits(Guid.Parse(CourseId));
+            Course.MyPresense = Units.Where(u => u.MyAttendenceState == 781410000).Count();
+            Course.MyAbsence = Units.Where(u => u.MyAttendenceState == 781410002).Count();
+            Course.MyExcusedAbsence = Units.Where(u => u.MyAttendenceState == 781410001).Count();
+            Course.Picture = Course.Picture == null ? "kurs.jpg" : "data:image/jpeg;base64," + Course.Picture;
+            await InvokeAsync(() => StateHasChanged());
         }
         catch (Exception ex)
         {
             NavigationManager.NavigateTo("/accessDenied");
         }
 
-        await InvokeAsync(() => StateHasChanged());
-        Units = await CourseDataService.GetCourseUnits(Guid.Parse(CourseId));
-        Course.MyPresense = Units.Where(u => u.MyAttendenceState == 781410000).Count();
-        Course.MyAbsence = Units.Where(u => u.MyAttendenceState == 781410002).Count();
-        Course.MyExcusedAbsence = Units.Where(u => u.MyAttendenceState == 781410001).Count();
-        Course.Picture = Course.Picture == null ? "kurs.jpg" : "data:image/jpeg;base64," + Course.Picture;
-        await InvokeAsync(() => StateHasChanged());
+
     }
 
 }

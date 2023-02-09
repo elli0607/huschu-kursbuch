@@ -75,14 +75,19 @@
 
     protected async override Task OnInitializedAsync()
     {
-        var claims = (await authenticationStateTask).User.Claims.ToList();
-        var authenticatedEmail = claims.FirstOrDefault(x => x.Type == "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress")?.Value;
-        CourseUnitModuleDto = await CourseDataService.GetCourseUnitModule(Guid.Parse(ModuleId), Guid.Parse(UnitId), Guid.Parse(CourseId), authenticatedEmail);
-        CourseUnitModuleDto.Picture = CourseUnitModuleDto.Picture == null ? CourseUnitModuleDto.Picture = "dog.svg" : "data:image /jpeg;base64," + CourseUnitModuleDto.Picture;
-        await InvokeAsync(() => StateHasChanged());
+        try
+        {
+            var claims = (await authenticationStateTask).User.Claims.ToList();
+            var authenticatedEmail = claims.FirstOrDefault(x => x.Type == "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress")?.Value;
+            CourseUnitModuleDto = await CourseDataService.GetCourseUnitModule(Guid.Parse(ModuleId), Guid.Parse(UnitId), Guid.Parse(CourseId), authenticatedEmail);
+            CourseUnitModuleDto.Picture = CourseUnitModuleDto.Picture == null ? CourseUnitModuleDto.Picture = "dog.svg" : "data:image /jpeg;base64," + CourseUnitModuleDto.Picture;
+            await InvokeAsync(() => StateHasChanged());
 
-        /*CourseUnitSubModules = await CourseDataService.GetSubModules(Guid.Parse(ModuleId));
-        await InvokeAsync(() => StateHasChanged());*/
+        } catch (Exception ex)
+        {
+            NavigationManager.NavigateTo("/accessDenied");
+        }
+
     }
 
 }

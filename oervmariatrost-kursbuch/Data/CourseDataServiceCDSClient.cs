@@ -14,21 +14,23 @@ namespace oervmariatrost_kursbuch.Data
     public class CourseDataServiceCDSClient : ICourseDataService
     {
         private readonly ServiceClient _serviceClient;
-        private readonly UserSessionDataService _userService;
+        private UserSessionDataService _userSessionData;
 
-        public CourseDataServiceCDSClient(ServiceClient serviceClient, UserSessionDataService userDataService)
+        public CourseDataServiceCDSClient(ServiceClient serviceClient)
         {
-            _userService = userDataService;
             _serviceClient = serviceClient;
+            _userSessionData = new UserSessionDataService();
+
         }
 
         #region Authentication Stuff
         public async Task InitializeUserData(string email)
         {
-            if (this._userService.IsAuthenticated)
+            if (_userSessionData.IsAuthenticated)
             {
                 return;
             }
+
 
             this.RequestContactForLoginMail(email);
             this.SetCoursesForLoggedInUser();
@@ -49,7 +51,7 @@ namespace oervmariatrost_kursbuch.Data
             if (foundContacts.Entities != null && foundContacts.Entities.Count > 0)
             {
                 var actualContact = foundContacts.Entities.First();
-                _userService.SetInitialContactData(actualContact.Id, actualContact.GetAttributeValue<string>(contact.Fullname), email);
+                _userSessionData.SetInitialContactData(actualContact.Id, actualContact.GetAttributeValue<string>(contact.Fullname), email);
             }
             else
             {
@@ -62,7 +64,7 @@ namespace oervmariatrost_kursbuch.Data
             DVCourseMember courseMember = new DVCourseMember();
             var courseMember_Query = new QueryExpression(courseMember.LogicalName);
             courseMember_Query.ColumnSet.AddColumns(courseMember.GetAllLogicalNamesForEntityFields().ToArray());
-            courseMember_Query.Criteria.AddCondition(courseMember.Member, ConditionOperator.Equal, _userService.ContactId);
+            courseMember_Query.Criteria.AddCondition(courseMember.Member, ConditionOperator.Equal, _userSessionData.ContactId);
 
             var allCourses = _serviceClient.RetrieveMultiple(courseMember_Query);
 
@@ -82,7 +84,7 @@ namespace oervmariatrost_kursbuch.Data
                     CourseToCoursememberId.Add(details);
                 }
 
-                _userService.SetCoursesAndCoursememberIds(CourseToCoursememberId);
+                _userSessionData.SetCoursesAndCoursememberIds(CourseToCoursememberId);
             }
             else
             {
@@ -94,9 +96,13 @@ namespace oervmariatrost_kursbuch.Data
         #region List All Courses
         public async Task<IList<CourseOverviewDTO>> GetAvailableCourses(string email)
         {
-            if (!_userService.IsAuthenticated)
+            if (!_userSessionData.IsAuthenticated)
             {
-                throw new NoCoursesForUserFoundException("Irgendetwas hat da nicht geklappt! Für dich gibt es keine Kurse");
+                await this.InitializeUserData(email);
+                if(!_userSessionData.IsAuthenticated)
+                {
+                    throw new NoCoursesForUserFoundException("Irgendetwas hat da nicht geklappt! Für dich gibt es keine Kurse");
+                }
             }
 
             List<CourseOverviewDTO> CourseList = new List<CourseOverviewDTO>();
@@ -106,7 +112,7 @@ namespace oervmariatrost_kursbuch.Data
             courseQuery.ColumnSet.AddColumns(course.GetOverviewFieldsLogicalNames().ToArray());
             var courseIdFilter = new FilterExpression(LogicalOperator.Or);
 
-            foreach (var courseDetails in _userService.CourseToMemberList)
+            foreach (var courseDetails in _userSessionData.CourseToMemberList)
             {
                 courseIdFilter.AddCondition(course.Id, ConditionOperator.Equal, courseDetails.CourseId);
             }
@@ -120,8 +126,8 @@ namespace oervmariatrost_kursbuch.Data
             {
                 CourseOverviewDTO courseModel = new CourseOverviewDTO();
                 courseModel.CourseId = yourCourse.Id;
-                courseModel.BoughtCourseBook = _userService.UserBoughtCoursebookForCourse(yourCourse.Id);
-                courseModel.DogName = _userService.GetDogNameForCourse(yourCourse.Id);
+                courseModel.BoughtCourseBook = _userSessionData.UserBoughtCoursebookForCourse(yourCourse.Id);
+                courseModel.DogName = _userSessionData.GetDogNameForCourse(yourCourse.Id);
 
                 courseModel.CourseStartDate = yourCourse.GetAttributeValue<DateTime>(course.Kursstart);
                 courseModel.NumberOfUnits = yourCourse.GetAttributeValue<int>(course.NumberOfUnits);
@@ -147,7 +153,7 @@ namespace oervmariatrost_kursbuch.Data
 
         public async Task<CourseDetailDTO> GetCourseDetails(Guid courseId, string email)
         {
-            if (!this._userService.IsAuthenticated || !this._userService.UserIsAllowedToCourseBook(courseId))
+            if (!this._userSessionData.IsAuthenticated || !this._userSessionData.UserIsAllowedToCourseBook(courseId))
             {
                 throw new StrizziException("Nanana! Da hast du nichts verloren! Bitte bleib bei den Inhalten, die für dich bereitgestellt sind.");
             }
@@ -185,7 +191,7 @@ namespace oervmariatrost_kursbuch.Data
 
         public async Task<IList<CourseUnitOverviewDTO>> GetCourseUnits(Guid courseId)
         {
-            if (!this._userService.IsAuthenticated || !this._userService.UserIsAllowedToCourseBook(courseId))
+            if (!this._userSessionData.IsAuthenticated || !this._userSessionData.UserIsAllowedToCourseBook(courseId))
             {
                 throw new StrizziException("Nanana! Da hast du nichts verloren! Bitte bleib bei den Inhalten, die für dich bereitgestellt sind.");
             }
@@ -203,7 +209,7 @@ namespace oervmariatrost_kursbuch.Data
             var attendence = courseHourQuery.AddLink(dvAttendenceHelper.LogicalName, dvCourseHourHelper.Id, dvAttendenceHelper.CourseUnit);
             attendence.EntityAlias = DataverseConstants.AttendenceAlias;
             attendence.Columns.AddColumns(dvAttendenceHelper.GetAllLogicalNamesForEntityFields());
-            attendence.LinkCriteria.AddCondition(dvAttendenceHelper.CourseMember, ConditionOperator.Equal, this._userService.GetCourseMemberIdForCourse(courseId));
+            attendence.LinkCriteria.AddCondition(dvAttendenceHelper.CourseMember, ConditionOperator.Equal, this._userSessionData.GetCourseMemberIdForCourse(courseId));
 
             EntityCollection result = _serviceClient.RetrieveMultiple(courseHourQuery);
 
@@ -223,7 +229,7 @@ namespace oervmariatrost_kursbuch.Data
 
         public async Task<CourseUnitDetailDTO> GetCourseUnit(Guid courseUnit, Guid courseId)
         {
-            if (!this._userService.IsAuthenticated || !this._userService.UserIsAllowedToCourseBook(courseId))
+            if (!this._userSessionData.IsAuthenticated || !this._userSessionData.UserIsAllowedToCourseBook(courseId))
             {
                 throw new StrizziException("Nanana! Da hast du nichts verloren! Bitte bleib bei den Inhalten, die für dich bereitgestellt sind.");
             }
@@ -245,7 +251,7 @@ namespace oervmariatrost_kursbuch.Data
 
             // Add filter query.Criteria
             attQuery.Criteria.AddCondition(dvAttHelper.CourseUnit, ConditionOperator.Equal, courseUnit);
-            attQuery.Criteria.AddCondition(dvAttHelper.CourseMember, ConditionOperator.Equal, this._userService.GetCourseMemberIdForCourse(courseId));
+            attQuery.Criteria.AddCondition(dvAttHelper.CourseMember, ConditionOperator.Equal, this._userSessionData.GetCourseMemberIdForCourse(courseId));
 
             EntityCollection att = _serviceClient.RetrieveMultiple(attQuery);
             courseUnitModel.MyAttendenceState = att.Entities.Count > 0 ? att.Entities.First().GetAttributeValue<OptionSetValue>(dvAttHelper.AttendenceState).Value : (int)DataverseConstants.CourseAttencendeState.Abwesend;
@@ -254,7 +260,7 @@ namespace oervmariatrost_kursbuch.Data
 
         public async Task<CourseUnitModuleDTO> GetCourseUnitModule(Guid moduleId, Guid courseUnitId, Guid courseId, string email)
         {
-            if (!this._userService.IsAuthenticated || !this._userService.UserIsAllowedToCourseBook(courseId))
+            if (!this._userSessionData.IsAuthenticated || !this._userSessionData.UserIsAllowedToCourseBook(courseId))
             {
                 throw new StrizziException("Nanana! Da hast du nichts verloren! Bitte bleib bei den Inhalten, die für dich bereitgestellt sind.");
             }
@@ -292,16 +298,15 @@ namespace oervmariatrost_kursbuch.Data
                 unitModuleModel.Picture = Convert.ToBase64String((byte[])mainModul.GetAttributeValue<AliasedValue>(mainmodule.EntityAlias + "." + dvMainModuleHelper.Image).Value).ToString();
             }
 
-            var query2 = new QueryExpression("kubu_submodul");
-
-            // Add columns to query.ColumnSet
-            query2.ColumnSet.AddColumns("kubu_name", "kubu_description", "kubu_order", "kubu_link", "kubu_criteriafornextstep");
+            DVSubModule dVSubModuleHelper = new DVSubModule(); 
+            var query2 = new QueryExpression(dVSubModuleHelper.LogicalName);
+            query2.ColumnSet.AddColumns(dVSubModuleHelper.GetAllLogicalNamesForEntityFields());
 
             // Add filter query.Criteria
-            query2.Criteria.AddCondition("kubu_mainmodul", ConditionOperator.Equal, this.GetAliasedAttributeAsString(mainmodule.EntityAlias + ".kubu_modulid", mainModul));
+            query2.Criteria.AddCondition(dvMainModuleHelper.LogicalName, ConditionOperator.Equal, this.GetAliasedAttributeAsString(mainmodule.EntityAlias + ".kubu_modulid", mainModul));
 
             // Add orders
-            query2.AddOrder("kubu_order", OrderType.Ascending);
+            query2.AddOrder(dVSubModuleHelper.Order, OrderType.Ascending);
 
             EntityCollection subModules = _serviceClient.RetrieveMultiple(query2);
             unitModuleModel.SubModules = new List<CourseUnitSubModuleDTO>();
@@ -309,12 +314,12 @@ namespace oervmariatrost_kursbuch.Data
             foreach (var subModule in subModules.Entities)
             {
                 CourseUnitSubModuleDTO subModel = new CourseUnitSubModuleDTO();
-                subModel.Name = subModule.GetAttributeValue<string>("kubu_name");
+                subModel.Name = subModule.GetAttributeValue<string>(dVSubModuleHelper.Name);
 
                 if (unitModuleModel.IncludeTheory || unitModuleModel.SubModuleId == subModule.Id)
                 {
-                    subModel.Link = subModule.GetAttributeValue<string>("kubu_link");
-                    subModel.Description = subModule.GetAttributeValue<string>("kubu_description");
+                    subModel.Link = subModule.GetAttributeValue<string>(dVSubModuleHelper.Link);
+                    subModel.Description = subModule.GetAttributeValue<string>(dVSubModuleHelper.Description);
                 }
 
                 unitModuleModel.SubModules.Add(subModel);
@@ -325,7 +330,7 @@ namespace oervmariatrost_kursbuch.Data
 
         public async Task<IList<CourseUnitModuleDTO>> GetCourseUnitModules(Guid courseUnit, Guid courseId, string email)
         {
-            if (!this._userService.IsAuthenticated || !this._userService.UserIsAllowedToCourseBook(courseId))
+            if (!this._userSessionData.IsAuthenticated || !this._userSessionData.UserIsAllowedToCourseBook(courseId))
             {
                 throw new StrizziException("Nanana! Da hast du nichts verloren! Bitte bleib bei den Inhalten, die für dich bereitgestellt sind.");
             }
