@@ -7,7 +7,7 @@ namespace oervmariatrost_kursbuch.Data.DataverseModels
         private string nameLogical = "kubu_name";
         private string descriptionLogical = "kubu_description";
         private string orderLogical = "kubu_order";
-        private string subModuleLogical = "kubu_submodule";
+        private string mainModuleLogical = "kubu_mainmodul";
         private string linkLogical = "kubu_link";
         private string nextStepLogical = "kubu_criteriafornextstep"; 
 
@@ -18,7 +18,15 @@ namespace oervmariatrost_kursbuch.Data.DataverseModels
             this.AddField(Order);
             this.AddField(Link);
             this.AddField(NextStep);
-            this.AddField(SubModule);
+            this.AddField(MainModule);
+        }
+
+        public string MainModule
+        {
+            get
+            {
+                return mainModuleLogical;
+            }
         }
 
         public string Name
@@ -42,14 +50,6 @@ namespace oervmariatrost_kursbuch.Data.DataverseModels
             get
             {
                 return orderLogical;
-            }
-        }
-
-        public string SubModule
-        {
-            get
-            {
-                return subModuleLogical;
             }
         }
         public string NextStep
