@@ -2,22 +2,20 @@
 @inject ICourseDataService cdsDataClient;
 <AuthorizeView>
     <Authorized>
-        <div class="row">
-            <div class="col-auto hide-login-name">
-                <div class="user-text"> Hallo, @FullName </div>
+        <div class="login-display-row">
+            <div class="login-display-item hide-login-name">
+                <div class="user-text"> Hallo, @FullName!</div>
             </div>
-            <div class="col-auto hide-login-name">
 
-            </div>
-            <div class="col-auto">
+            <div class="login-display-item">
                 <form method="post" action="Account/LogOut">
-                    <button type="submit" class="nav-link btn btn-link logout-button"><i class="fa-solid fa-arrow-right-from-bracket nav-icon"></i>Ausloggen</button>
+                    <button type="submit" class="nav-item nav-link logout-button"><i class="fa-solid fa-arrow-right-from-bracket nav-icon"></i>Ausloggen</button>
                 </form>
             </div>
         </div>
     </Authorized>
     <NotAuthorized>
-        <a href="Account/Login" class="nav-link login-button"><i class="fa-solid fa-arrow-right-to-bracket nav-icon"></i>Einloggen</a>
+        <a href="Account/Login" class="nav-item nav-link login-button"><i class="fa-solid fa-arrow-right-to-bracket nav-icon"></i>Einloggen</a>
     </NotAuthorized>
 </AuthorizeView>
 

@@ -2,16 +2,6 @@
     background-color: rgba(255, 255, 255, 0.1);
 }
 
-.top-row {
-    height: 3.5rem;
-    background-color: #EA9B32;
-    padding: 0em;
-}
-
-.navbar-brand {
-    font-size: 1.1rem;
-}
-
 .header-logo {
     width:auto; 
     height:37px;
@@ -19,29 +9,6 @@
 
 .navbar > .container-fluid {
     background: none !important;
-}
-
-.nav-link {
-    color: white;
-}
-
-.oi {
-    width: 2rem;
-    font-size: 1.1rem;
-    vertical-align: text-top;
-    top: -2px;
-}
-
-.nav-item {
-    font-size: 0.9rem;
-}
-
-.nav-item ::deep a {
-    border-radius: 4px;
-    height: 3rem;
-    display: flex;
-    align-items: center;
-    line-height: 3rem;
 }
 
 .active {
@@ -62,18 +29,8 @@
     margin: 0px 0px 0px auto;
 }
 
-.our-nav {
-    display: flex;
-    height: 100%;
-    align-items: center;
-}
-
 .nav-bar-bg {
     background-color: #EA9B32;
 }
 
-.nav-item:hover, .nav-link:hover,
-.nav-item:active, .nav-link:active {
-    color: grey
-}
 
