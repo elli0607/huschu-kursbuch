@@ -98,11 +98,6 @@ h1:focus {
     font-size: x-large;
 }
 
-.side-container {
-    width: 100%;
-    min-height: calc(100vh - 13.8rem);
-}
-
 .content {
     justify-content: center;
     align-items: center;
@@ -133,12 +128,6 @@ h1:focus {
 
 
 
-.user-text {
-    vertical-align: middle;
-    color: white;
-    margin: 0.5rem 0.5rem;
-    font-variant: small-caps;
-}
 
 .home-picture {
     width: 80%;
@@ -279,20 +268,6 @@ h1:focus {
     box-shadow: none;
 }
 
-.col-auto {
-    align-self: center;
-}
-
-.logout-button {
-    padding-left: 0;
-    display: flex;
-}
-
-.login-button {
-    padding-left: 0;
-    display: flex;
-}
-
 .h1, h1 {
     text-align: center;
 }
@@ -305,8 +280,37 @@ h1:focus {
     max-width: 200px;
 }
 
-@media (max-width: 992px) {
-    .hide-login-name {
-        display: none;
-    }
+
+/* Navbar *****************************************************************************/
+.nav-link {
+    color: white;
+    display: flex;
+    align-items: center;
 }
+
+.nav-item:hover, .nav-link:hover,
+.nav-item:active, .nav-link:active {
+    color: grey
+}
+
+.nav-item:focus, .nav-link:focus {
+    color: white
+}
+
+.nav-item {
+    font-size: 0.9rem;
+    display: flex;
+    align-items: center;
+}
+
+.nav-item ::deep a {
+    border-radius: 4px;
+    height: 3rem;
+    display: flex;
+    align-items: center;
+    line-height: 3rem;
+}
+
+/* Nabbar Ende ************************************************************************/
+
+
