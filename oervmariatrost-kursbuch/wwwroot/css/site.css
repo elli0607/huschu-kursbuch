@@ -13,10 +13,6 @@ h1:focus {
     padding-bottom: 2.5rem;
 }
 
-.image-background {
-    background-image: url(/SFF_8833.jpg);
-}
-
 .grey-overlay {
     background-color: rgba(255,255,255,0.5);
 }
@@ -27,14 +23,6 @@ h1:focus {
     -moz-user-select: none;
     -ms-user-select: none;
     user-select: none;
-}
-
-.index-content {
-    width: 100%;
-    padding: 0rem 2.5rem;
-    text-align: center;
-    flex-wrap: nowrap;
-    justify-content: center;
 }
 
 .nav-link, .btn-link {
@@ -78,10 +66,6 @@ h1:focus {
     color: grey
 }
 
-.course-unit-row {
-    align-items: baseline;
-}
-
 .course-headline {
     text-align: center;
     margin: 2rem auto;
@@ -122,29 +106,8 @@ h1:focus {
     text-align: center;
 }
 
-    .card-footer > .btn {
-        width: 90%;
-    }
-
-
-
-
-.home-picture {
-    width: 80%;
-    max-width: 900px;
-    padding: 2rem
-}
-
-.margin-header {
-    padding: 0rem;
-    margin: 5.5rem auto 2rem auto;
-}
-
-.course-card {
-    margin: 0rem auto;
-    border-radius: 10px;
-    background-color: rgba(255,255,255,0.8);
-    max-width: 500px;
+.card-footer > .btn {
+    width: 90%;
 }
 
 .card-container {
@@ -170,44 +133,6 @@ h1:focus {
     font-weight: bold;
     border-bottom: 1px solid lightgrey;
     margin-bottom: 1rem;
-}
-
-.course-card > .card-body {
-    padding: 1rem 1rem 1.5rem 1.5rem;
-}
-
-.course-card > .card-footer {
-    background: none !important;
-}
-
-.course-card > .card-title {
-    height: 5.5rem;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border-bottom: solid lightgrey 1px;
-}
-
-.course-card > img {
-    width: 70%;
-    height: auto;
-    margin-left: 15%
-}
-
-.module-card {
-    min-height: 15rem;
-}
-
-.module-card-container {
-    justify-content: center;
-}
-
-.module-card > .card-title {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border-bottom: solid lightgrey 1px;
-    height: 4rem;
 }
 
 .btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
@@ -276,10 +201,39 @@ h1:focus {
     margin: 0;
 }
 
+.h3, h3, .h4, h4, .h5, h5 {
+    margin-top: 0;
+}
+
 .module-image {
     max-width: 200px;
 }
 
+.index-content {
+    width: 100%;
+    padding: 0px 1rem;
+    text-align: center;
+    flex-wrap: nowrap;
+    justify-content: center;
+}
+
+.margin-header {
+    padding: 0rem;
+    margin: 5.5rem auto 2rem auto;
+}
+
+/* Index *******************************************************************************/
+.image-background {
+    background-image: url(/SFF_8833.jpg);
+    text-align: center;
+}
+
+.home-picture {
+    width: 80%;
+    max-width: 900px;
+    padding: 2rem 0;
+}
+/* Index Ende *************************************************************************/
 
 /* Navbar *****************************************************************************/
 .nav-link {

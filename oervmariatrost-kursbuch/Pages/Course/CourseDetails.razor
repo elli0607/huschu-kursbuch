@@ -7,15 +7,13 @@
 @inject ICourseDataService CourseDataService;
 
 
-<div class="justify-content-center align-content-center">
-    <h1 class="margin-header">@Course?.Title</h1>
-</div>
+<h1 class="margin-header">@Course?.Title</h1>
 
 <div class="container-fluid course-detail-container">
     <div class="card m-3" style=" border:none">
         <div class="row g-0 mt-3">
             <div class="col-md-4 course-detail-image">
-                <img src="@Course?.Picture" class="img-fluid rounded-start" alt="...">
+                <img src="@Course?.Picture" class="img-fluid rounded-start course-detail-image" alt="...">
             </div>
             <div class="col-md-8">
                 <div class="card-body">
@@ -57,15 +55,15 @@
                 <h2><bold>@x</bold></h2>
             </div>
             <div class="col-md-8">
-                <div class="row m-3 justify-content-between course-unit-row">
+                <div class="row justify-content-between course-unit-row">
                     <div class="col-auto">
                         <h5><bold>@unit.ExecutionDate.ToString("dd.MM.yyyy")     @unit.Name</bold></h5>
                     </div>
                 </div>
-                <div class="row m-3">
-                    <div class="row justify-content-between m-3">
+                <div class="row">
+                    <div class="row justify-content-between">
                         <div class="col-auto">
-                            <p><small class="text-muted">@((MarkupString)unit.Description)</small></p>
+                            <small class="text-muted">@((MarkupString)unit.Description)</small>
                         </div>
                     </div>
                 </div>

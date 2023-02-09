@@ -1,0 +1,28 @@
+﻿.course-card {
+    margin: 0rem auto;
+    border-radius: 10px;
+    background-color: rgba(255,255,255,0.8);
+    max-width: 500px;
+}
+
+.course-card > .card-body {
+    padding: 1rem 1rem 1.5rem 1.5rem;
+}
+
+.course-card > .card-footer {
+    background: none !important;
+}
+
+.course-card > .card-title {
+    height: 4.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-bottom: solid lightgrey 1px;
+}
+
+.course-card > img {
+    width: 70%;
+    height: auto;
+    margin-left: 15%
+}

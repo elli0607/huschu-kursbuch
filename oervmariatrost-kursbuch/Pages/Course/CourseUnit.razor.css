@@ -1,0 +1,15 @@
+﻿.module-card {
+    min-height: 15rem;
+}
+
+.module-card-container {
+    justify-content: center;
+}
+
+.module-card > .card-title {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-bottom: solid lightgrey 1px;
+    height: 4rem;
+}

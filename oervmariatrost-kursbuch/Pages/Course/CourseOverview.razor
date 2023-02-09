@@ -11,14 +11,13 @@
 
 
 
-<div class="justify-content-center align-content-center">
-    <h1 class="margin-header">Meine Kurse</h1>
-</div>
 
-<div class="row row-cols-1 row-cols-md-2 g-4 card-container">
+<h1 class="margin-header">Meine Kurse</h1>
+
+<div class="row row-cols-1 row-cols-md-2 card-container">
     @foreach (var course in Courses)
     {
-        <div class="col">
+        <div class="col pb-4">
             <div class="card h-100 course-card">
                 <div class="card-title">
                     <h3>@course.Title</h3>
