@@ -218,6 +218,12 @@ font-weight: bold;
     margin-top: 0;
 }
 
+.center-image {
+    align-items: center;
+    display: flex;
+    justify-content: center;
+}
+
 .module-image {
     max-width: 200px;
 }
