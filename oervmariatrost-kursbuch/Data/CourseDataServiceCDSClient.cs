@@ -259,6 +259,8 @@ namespace oervmariatrost_kursbuch.Data
             attQuery.Criteria.AddCondition(dvAttHelper.CourseMember, ConditionOperator.Equal, this._userSessionData.GetCourseMemberIdForCourse(courseId));
 
             EntityCollection att = _serviceClient.RetrieveMultiple(attQuery);
+            courseUnitModel.MyPersonalNotes = att.Entities.First().GetAttributeValue<string>(dvAttHelper.PersonalNotes);
+
             courseUnitModel.MyAttendenceState = att.Entities.Count > 0 ? att.Entities.First().GetAttributeValue<OptionSetValue>(dvAttHelper.AttendenceState).Value : (int)DataverseConstants.CourseAttencendeState.Abwesend;
             return courseUnitModel;
         }
@@ -287,6 +289,7 @@ namespace oervmariatrost_kursbuch.Data
 
             EntityCollection practicedEx = _serviceClient.RetrieveMultiple(practicedEx_Query);
 
+            //not only first
             Entity mainModul = practicedEx.Entities.First();
 
             unitModuleModel.Description = this.GetAliasedAttributeAsString(mainmodule.EntityAlias + "." + dvMainModuleHelper.Goal, mainModul);
@@ -319,8 +322,8 @@ namespace oervmariatrost_kursbuch.Data
             {
                 CourseUnitSubModuleDTO subModel = new CourseUnitSubModuleDTO();
                 subModel.Name = subModule.GetAttributeValue<string>(dVSubModuleHelper.Name);
-
-                if (unitModuleModel.IncludeTheory || unitModuleModel.SubModuleId == subModule.Id)
+                var alreadyAdded = practicedEx.Entities.Where(pracEx => pracEx.GetAttributeValue<EntityReference>(dvPracticedExHelper.SubModule).Id == subModule.Id).FirstOrDefault();
+                if (unitModuleModel.IncludeTheory || alreadyAdded != null)
                 {
                     subModel.Link = subModule.GetAttributeValue<string>(dVSubModuleHelper.Link);
                     subModel.Description = subModule.GetAttributeValue<string>(dVSubModuleHelper.Description);
@@ -363,10 +366,23 @@ namespace oervmariatrost_kursbuch.Data
             {
                 CourseUnitModuleDTO model = new CourseUnitModuleDTO();
                 EntityReference mModule = mod.GetAttributeValue<EntityReference>("kubu_mainmodule");
+                var existing = moduleModels.Find(exMod => exMod.ModuleId == mModule.Id);
+                if (existing != null)
+                {
+                    existing.SubModules.Add(new CourseUnitSubModuleDTO() { Id = mod.GetAttributeValue<EntityReference>("kubu_submodule").Id });
+                    continue;
+                }
+
                 model.ModuleId = mModule.Id;
                 model.Name = mModule.Name;
                 model.Description = this.GetAliasedAttributeAsString(mainmodule.EntityAlias + ".kubu_whatsitfor", mod);
                 model.IncludeTheory = mod.GetAttributeValue<bool>("kubu_incltheory");
+
+                if(!model.IncludeTheory)
+                {
+                    model.SubModules = new List<CourseUnitSubModuleDTO>();
+                    model.SubModules.Add(new CourseUnitSubModuleDTO() { Id = mod.GetAttributeValue<EntityReference>("kubu_submodule").Id });
+                }
 
                 moduleModels.Add(model);
             }

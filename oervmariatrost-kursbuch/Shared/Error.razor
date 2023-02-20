@@ -1,0 +1,19 @@
+﻿@page "/error/{message}"
+
+<div>
+    <div class="main">
+        <div class="content align-items-center justify-content-center">
+            <div class="index-content error-page-margin">
+                <h1> Es ist ein Fehler aufgetreten!</h1>
+                <div class="error-text">@Message</div>
+                <div class="error-details">Bei weiteren Fragen oder Anliegen wende dich einfach an: info(a)hundeschule-mariatrost.at</div>
+                <img style="width:80%" src="sad_dog.jpg" />
+            </div>
+        </div>
+    </div>
+</div>
+
+@code {
+    [Parameter]
+    public string Message { get; set; }
+}

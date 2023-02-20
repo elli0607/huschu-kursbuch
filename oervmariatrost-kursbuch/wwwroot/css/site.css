@@ -13,6 +13,19 @@ h1:focus {
     padding-bottom: 2.5rem;
 }
 
+.error-page-margin {
+    margin-top:15rem;
+}
+
+.error-text {
+    margin: 2rem;
+}
+
+.error-details  {
+padding-top: 3rem;
+font-weight: bold;
+}
+
 .grey-overlay {
     background-color: rgba(255,255,255,0.5);
 }

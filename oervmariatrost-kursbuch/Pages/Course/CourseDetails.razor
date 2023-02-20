@@ -127,10 +127,7 @@
         }
         catch (Exception ex)
         {
-            NavigationManager.NavigateTo("/accessDenied");
+            NavigationManager.NavigateTo("/error/" + ex.Message);
         }
-
-
     }
-
 }

@@ -8,5 +8,7 @@
         public string Lifehacks { get; set;}
 
         public string Homework { get; set; }
+
+        public string MyPersonalNotes { get; set; }
     }
 }

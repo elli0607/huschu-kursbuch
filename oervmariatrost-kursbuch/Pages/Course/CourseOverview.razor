@@ -57,12 +57,17 @@
         var claims = (await authenticationStateTask).User.Claims.ToList();
         var authenticatedEmail = claims.FirstOrDefault(x => x.Type == "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress")?.Value;
         var test = CourseDataService.InitializeUserData(authenticatedEmail);
-        Courses = await CourseDataService.GetAvailableCourses(authenticatedEmail);
-        foreach(var course in Courses)
+        try {
+            Courses = await CourseDataService.GetAvailableCourses(authenticatedEmail);
+            foreach (var course in Courses)
+            {
+                course.Picture = course.Picture == null ? "kurs.jpg" : "data:image/jpeg;base64," + course.Picture;
+            }
+            await InvokeAsync(() => StateHasChanged());
+        } catch (Exception ex)
         {
-            course.Picture = course.Picture == null ? "kurs.jpg" : "data:image/jpeg;base64," + course.Picture;
+            NavigationManager.NavigateTo("/error/"+ex.Message);   
         }
-        await InvokeAsync(() => StateHasChanged());
     }
 
 }

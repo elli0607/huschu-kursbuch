@@ -45,7 +45,9 @@
             </div>
 
             <div class="col-auto justify-content-end">
-                <a href="@submodule.Link" target="_blank" class="btn btn-outline-primary"> Link</a>
+                @if(!string.IsNullOrEmpty(submodule.Link)) {
+                    <a href="@submodule.Link" target="_blank" class="btn btn-outline-primary"> Link</a>
+                }
             </div>
         </div>
         <div class="row justify-content-between m-3">
@@ -83,9 +85,7 @@
 
         } catch (Exception ex)
         {
-            NavigationManager.NavigateTo("/accessDenied");
+            NavigationManager.NavigateTo("/error/" + ex.Message);
         }
-
     }
-
 }

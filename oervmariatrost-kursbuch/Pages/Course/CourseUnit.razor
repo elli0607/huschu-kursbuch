@@ -36,6 +36,12 @@
             <h5>Hausübung</h5>
             @((MarkupString)CourseDetails?.Homework)
         </div>
+        @if(!string.IsNullOrEmpty(CourseDetails?.MyPersonalNotes)) {
+            <div class="col-auto" style="margin-top: 2rem">
+                <h5>Meine Persönlichen Anmerkungen</h5>
+                @((MarkupString)CourseDetails?.MyPersonalNotes)
+            </div>
+        }
     </div>
 
     <div class="accordion" id="accordionExample">
@@ -137,7 +143,7 @@
         } 
         catch(Exception ex)
         {
-            NavigationManager.NavigateTo("/accessDenied");
+            NavigationManager.NavigateTo("/error/" + ex.Message);
         }
     }
 

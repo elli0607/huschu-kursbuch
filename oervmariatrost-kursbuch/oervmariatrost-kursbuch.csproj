@@ -5,6 +5,7 @@
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <RootNamespace>oervmariatrost_kursbuch</RootNamespace>
+    <ApplicationIcon>Hundeschule_Mariatrost_Logo_farbe.ico</ApplicationIcon>
   </PropertyGroup>
 
   <ItemGroup>
@@ -23,6 +24,10 @@
 
   <ItemGroup>
     <EditorConfigFiles Remove="D:\Hundeschule\Projects\huschu-kursbuch\oervmariatrost-kursbuch\.editorconfig" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="Hundeschule_Mariatrost_Logo_farbe.ico" />
   </ItemGroup>
 
 </Project>
